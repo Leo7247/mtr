@@ -3,158 +3,136 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta name="theme-color" content="#07111f">
+<meta name="theme-color" content="#081321">
 <title>Hong Kong MTR Simulator</title>
 
 <style>
-:root {
-  --bg:#07111f;
-  --panel:rgba(9,20,35,.94);
-  --panel2:rgba(17,34,54,.94);
-  --accent:#e51d45;
-  --cyan:#38d9f5;
-  --text:#f3f7fc;
-  --muted:#9fb1c7;
+:root{
+ --red:#e51d45;--blue:#168dcc;--cyan:#4de3f4;
+ --panel:rgba(5,17,30,.94);--border:#ffffff26;
 }
 *{box-sizing:border-box}
-html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#081321;color:white;font-family:Arial,sans-serif}
 button,select{font:inherit}
 button{cursor:pointer}
 #game{position:fixed;inset:0}
-canvas{display:block;width:100%;height:100%}
-.hidden{display:none!important}
+canvas{display:block}
 .screen{
- position:fixed;inset:0;z-index:10;display:flex;align-items:center;
- justify-content:center;padding:18px;background:
- radial-gradient(ellipse at 50% 15%,rgba(37,84,125,.38),transparent 55%),
- linear-gradient(135deg,rgba(3,10,20,.92),rgba(5,16,30,.97));
- overflow:auto
+ position:fixed;inset:0;z-index:20;display:flex;align-items:center;
+ justify-content:center;padding:16px;overflow:auto;
+ background:radial-gradient(ellipse at 50% 10%,#24486799,transparent 65%),#06101df5
 }
 .menu{
- width:min(950px,100%);max-height:94vh;overflow:auto;
- background:linear-gradient(145deg,rgba(18,36,57,.98),rgba(6,16,29,.98));
- border:1px solid rgba(255,255,255,.13);border-radius:24px;
- padding:clamp(18px,4vw,38px);box-shadow:0 30px 100px #0009
+ width:min(900px,100%);max-height:95vh;overflow:auto;padding:28px;
+ border-radius:23px;border:1px solid var(--border);
+ background:linear-gradient(145deg,#142b42f5,#081321f5);
+ box-shadow:0 30px 100px #000a
 }
-.brand{display:flex;align-items:center;gap:14px}
+.brand{display:flex;align-items:center;gap:15px}
 .logo{
- width:58px;height:58px;border-radius:17px;background:#e51d45;
- display:grid;place-items:center;font-size:29px;font-weight:900;
- box-shadow:0 8px 30px #e51d4544
+ width:58px;height:58px;border-radius:16px;background:var(--red);
+ display:grid;place-items:center;font-weight:1000;font-size:30px
 }
-h1{font-size:clamp(27px,5vw,45px);margin:0;letter-spacing:-1.5px}
-.subtitle{color:var(--muted);margin:8px 0 25px;line-height:1.5}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-.field{display:flex;flex-direction:column;gap:8px}
-.field label{font-size:12px;text-transform:uppercase;letter-spacing:1px;color:#9fb5cc;font-weight:bold}
+h1{margin:0;font-size:clamp(26px,5vw,43px);letter-spacing:-1px}
+.subtitle{color:#a9bfd2;line-height:1.6;margin:12px 0 25px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.field{display:flex;flex-direction:column;gap:7px}
+label{font-size:11px;letter-spacing:1px;color:#9eb4c9;font-weight:bold}
 select{
- width:100%;padding:14px;border:1px solid #ffffff22;border-radius:12px;
- color:white;background:#10243a;outline:none
+ padding:13px;border:1px solid #ffffff28;border-radius:11px;
+ background:#10263d;color:white;width:100%;outline:none
 }
-select option{background:#10243a;color:white}
+select option{background:#10263d}
 .primary,.secondary,.danger{
- border:0;border-radius:12px;padding:14px 18px;font-weight:bold;color:white;
- transition:.2s
+ padding:13px 17px;border:0;border-radius:11px;color:white;font-weight:bold
 }
-.primary{background:linear-gradient(135deg,#ed244c,#b80d32);box-shadow:0 8px 24px #e51d4533}
-.secondary{background:#203c57;border:1px solid #ffffff18}
-.danger{background:#753044}
-.primary:hover,.secondary:hover{filter:brightness(1.15);transform:translateY(-1px)}
-.startrow{display:flex;gap:12px;margin-top:22px;flex-wrap:wrap}
-.startrow button{flex:1;min-width:180px}
-.notice{margin-top:20px;color:#9fb1c7;font-size:12px;line-height:1.6}
-#hud{position:fixed;inset:0;z-index:4;pointer-events:none}
-.topbar{
- position:absolute;top:12px;left:12px;right:12px;display:flex;gap:8px;
- align-items:flex-start;justify-content:space-between
+.primary{background:linear-gradient(135deg,#ed3153,#b60e34)}
+.secondary{background:#24435e;border:1px solid #ffffff20}
+.danger{background:#823449}
+.actions{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
+.actions button{flex:1;min-width:160px}
+.note{color:#9db0c2;font-size:12px;line-height:1.6;margin-top:18px}
+#hud{position:fixed;inset:0;z-index:5;pointer-events:none}
+.top{
+ position:absolute;top:10px;left:10px;right:10px;
+ display:flex;justify-content:space-between;align-items:flex-start;gap:8px
 }
-.hudbox{
- background:rgba(5,15,27,.83);backdrop-filter:blur(12px);
- border:1px solid #ffffff20;border-radius:13px;padding:10px 13px;
- box-shadow:0 8px 30px #0003
+.panel{
+ background:var(--panel);border:1px solid var(--border);
+ border-radius:12px;padding:10px 13px;backdrop-filter:blur(10px)
 }
-.hudtitle{font-weight:900;font-size:13px}
-.hudsmall{font-size:11px;color:#aabbd0;margin-top:4px}
-.hudright{display:flex;gap:7px;pointer-events:auto;flex-wrap:wrap;justify-content:flex-end}
-.hudbtn{
- color:white;background:#122b43;border:1px solid #ffffff24;
- border-radius:10px;padding:10px 12px;font-size:12px;font-weight:bold
+.title{font-size:13px;font-weight:900}
+.small{font-size:11px;color:#a9bdd0;margin-top:4px}
+.topright{display:flex;gap:6px;pointer-events:auto;flex-wrap:wrap;justify-content:flex-end}
+.hbtn{
+ color:white;background:#142d45;border:1px solid #ffffff26;
+ border-radius:9px;padding:10px;font-size:11px;font-weight:bold
 }
-#statusbar{
+#status{
  position:absolute;bottom:13px;left:50%;transform:translateX(-50%);
- max-width:90%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
- font-size:12px;color:#eaf4ff;background:#071522d9;border:1px solid #ffffff20;
- border-radius:20px;padding:9px 15px
+ background:#061321e8;border:1px solid #ffffff25;border-radius:18px;
+ padding:9px 15px;font-size:12px;white-space:nowrap;max-width:92%;
+ overflow:hidden;text-overflow:ellipsis
 }
-#interaction{
- position:absolute;left:50%;top:58%;transform:translate(-50%,-50%);
- font-weight:bold;font-size:13px;color:white;text-shadow:0 2px 8px black;
- background:#071522bb;border:1px solid #ffffff44;border-radius:10px;padding:10px 15px
+#prompt{
+ position:absolute;top:57%;left:50%;transform:translate(-50%,-50%);
+ background:#071522c9;border:1px solid #ffffff40;border-radius:10px;
+ padding:10px 14px;font-size:12px;text-align:center
 }
-#crosshair{
- position:absolute;left:50%;top:50%;width:5px;height:5px;
- border-radius:50%;background:#fff;box-shadow:0 0 5px #000
+#cab{
+ position:absolute;bottom:12px;left:50%;transform:translateX(-50%);
+ width:min(690px,96%);padding:12px;border-radius:15px;
+ background:#061321f5;border:1px solid #ffffff35;pointer-events:auto;
+ display:none
 }
-#driverPanel{
- position:absolute;left:50%;bottom:12px;transform:translateX(-50%);
- width:min(680px,95%);padding:12px;border-radius:17px;
- background:rgba(5,14,25,.94);border:1px solid #ffffff2a;
- pointer-events:auto;display:none
+#cab.active{display:block}
+.cabhead{display:flex;justify-content:space-between;margin-bottom:9px;font-weight:bold;font-size:12px}
+.readouts{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+.readout{background:#142a40;padding:9px 4px;text-align:center;border-radius:9px}
+.readout b{display:block;color:var(--cyan);font-size:19px}
+.readout small{font-size:9px;color:#a9bdd0}
+.cabbuttons{display:flex;gap:7px;margin-top:8px}
+.cabbuttons button{flex:1;font-size:11px;padding:11px 4px}
+#mobile{
+ position:absolute;bottom:85px;left:10px;right:10px;
+ display:none;justify-content:space-between;align-items:flex-end;pointer-events:auto
 }
-#driverPanel.active{display:block}
-.driverhead{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:10px}
-.drivergrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.readout{background:#13283e;padding:9px;border-radius:10px;text-align:center}
-.readout b{display:block;font-size:18px;color:#4de2ff}
-.readout small{font-size:10px;color:#a9bdd1}
-.driverbuttons{display:flex;gap:7px;margin-top:9px}
-.driverbuttons button{flex:1}
-#mobileControls{
- position:absolute;bottom:90px;left:12px;right:12px;display:none;
- justify-content:space-between;align-items:flex-end;pointer-events:auto
+.pad{display:grid;grid-template-columns:repeat(3,47px);grid-template-rows:repeat(2,44px);gap:4px}
+.pad button,.act button{
+ color:white;background:#061321c9;border:1px solid #ffffff55;
+ border-radius:10px;touch-action:none;font-weight:bold
 }
-.pad{display:grid;grid-template-columns:repeat(3,48px);grid-template-rows:repeat(3,44px);gap:4px}
-.pad button,.actionpad button{
- background:#071522bb;color:white;border:1px solid #ffffff4a;
- border-radius:11px;font-weight:bold;touch-action:none
-}
-.pad .up{grid-column:2;grid-row:1}
-.pad .left{grid-column:1;grid-row:2}
-.pad .down{grid-column:2;grid-row:2}
-.pad .right{grid-column:3;grid-row:2}
-.actionpad{display:grid;grid-template-columns:repeat(2,55px);gap:7px}
-.actionpad button{height:48px}
-#toast{
- position:fixed;z-index:30;top:22%;left:50%;transform:translateX(-50%);
- background:#091a2b;border:1px solid #ffffff35;padding:12px 18px;
- border-radius:12px;opacity:0;pointer-events:none;transition:.2s;
- max-width:90%;text-align:center;font-size:13px
-}
-#toast.show{opacity:1}
-#mapPanel{
- position:fixed;z-index:12;right:12px;top:80px;width:230px;
- background:#071522ed;border:1px solid #ffffff25;border-radius:13px;
+.pad .up{grid-column:2}.pad .left{grid-column:1;grid-row:2}
+.pad .down{grid-column:2;grid-row:2}.pad .right{grid-column:3;grid-row:2}
+.act{display:grid;grid-template-columns:repeat(2,55px);gap:6px}
+.act button{height:45px;font-size:11px}
+#map{
+ position:fixed;z-index:15;top:75px;right:10px;width:240px;
+ background:#061321ed;border:1px solid #ffffff35;border-radius:13px;
  padding:13px;font-size:12px
 }
-#mapPanel b{font-size:14px}
-#mapPanel .muted{color:#9fb1c7;line-height:1.6}
+#toast{
+ position:fixed;z-index:30;top:22%;left:50%;transform:translateX(-50%);
+ background:#081a2b;border:1px solid #ffffff35;border-radius:12px;
+ padding:12px 17px;opacity:0;transition:.2s;pointer-events:none;
+ text-align:center;max-width:90%;font-size:13px
+}
+#toast.show{opacity:1}
+.hidden{display:none!important}
 @media(max-width:650px){
- .grid{grid-template-columns:1fr}
- .topbar{top:7px;left:7px;right:7px}
- .hudbox{padding:8px}
- .hudbtn{padding:9px;font-size:11px}
- #mobileControls{display:flex}
- #driverPanel{bottom:8px}
- .drivergrid{grid-template-columns:repeat(4,1fr)}
- .readout{padding:6px 3px}
- .readout b{font-size:15px}
- .driverbuttons button{font-size:11px;padding:10px 5px}
- #statusbar{bottom:75px}
+ .menu{padding:19px}.grid{grid-template-columns:1fr}
+ .top{top:6px;left:6px;right:6px}
+ .panel{padding:8px}.hbtn{padding:9px 7px;font-size:10px}
+ #mobile{display:flex}
+ #cab{bottom:5px}
+ .readout{padding:6px 2px}.readout b{font-size:15px}
+ .cabbuttons button{font-size:9px}
+ #status{bottom:75px}
 }
 </style>
 </head>
-
 <body>
+
 <div id="game"></div>
 
 <div id="menu" class="screen">
@@ -163,178 +141,133 @@ select option{background:#10243a;color:white}
    <div class="logo">M</div>
    <div>
     <h1>HONG KONG MTR</h1>
-    <div style="color:#f05b78;font-weight:bold;letter-spacing:3px;font-size:11px">RAILWAY SIMULATOR</div>
+    <div style="color:#ff6480;font-weight:bold;letter-spacing:3px;font-size:11px">RAILWAY SIMULATOR</div>
    </div>
   </div>
-  <p class="subtitle">Explore stations, operate trains, walk through the railway world and experience Hong Kong-inspired metro operations.</p>
-
+  <p class="subtitle">Explore Hong Kong-inspired railway stations, drive metro trains, travel as a passenger and experience a living railway environment.</p>
   <div class="grid">
-   <div class="field">
-    <label>Railway line</label>
-    <select id="lineSelect"></select>
+   <div class="field"><label>RAILWAY LINE</label><select id="line"></select></div>
+   <div class="field"><label>SUPPORTED TRAIN</label><select id="train"></select></div>
+   <div class="field"><label>GAME MODE</label>
+    <select id="mode"><option value="driver">Driver</option><option value="passenger">Passenger</option></select>
    </div>
-   <div class="field">
-    <label>Train type</label>
-    <select id="trainSelect"></select>
+   <div class="field"><label>STARTING STATION</label><select id="station"></select></div>
+   <div class="field"><label>STARTING TIME</label>
+    <select id="time"><option value="8">08:00 Morning</option><option value="12">12:00 Afternoon</option><option value="17">17:00 Evening</option><option value="22">22:00 Night</option></select>
    </div>
-   <div class="field">
-    <label>Game mode</label>
-    <select id="modeSelect">
-     <option value="driver">Driver — operate the train</option>
-     <option value="passenger">Passenger — explore and travel</option>
-    </select>
-   </div>
-   <div class="field">
-    <label>Starting location</label>
-    <select id="stationSelect"></select>
-   </div>
-   <div class="field">
-    <label>Time of day</label>
-    <select id="timeSelect">
-     <option value="8">Morning rush — 08:00</option>
-     <option value="12">Midday — 12:00</option>
-     <option value="17">Evening rush — 17:00</option>
-     <option value="22">Night — 22:00</option>
-    </select>
-   </div>
-   <div class="field">
-    <label>Graphics</label>
-    <select id="qualitySelect">
-     <option value="high">High</option>
-     <option value="medium">Balanced</option>
-     <option value="low">Performance</option>
-    </select>
+   <div class="field"><label>GRAPHICS QUALITY</label>
+    <select id="quality"><option value="high">High</option><option value="medium">Balanced</option><option value="low">Performance</option></select>
    </div>
   </div>
-
-  <div class="startrow">
-   <button class="primary" id="startBtn">START SIMULATION →</button>
-   <button class="secondary" id="helpBtn">CONTROLS & HELP</button>
+  <div class="actions">
+   <button class="primary" id="start">START GAME →</button>
+   <button class="secondary" id="help">CONTROLS</button>
   </div>
-  <div class="notice">
-   This is an evolving simulator prototype. It uses procedural 3D scenery and fictionalized gameplay systems inspired by Hong Kong railways. Station and train availability is representative, not an official operational timetable. Three.js is loaded online.
-  </div>
+  <div class="note">Single-file GitHub Pages game. Three.js is loaded online. This is a procedural simulator, not an official MTR product; train and station representations are illustrative and not exact engineering models.</div>
  </div>
 </div>
 
 <div id="hud" class="hidden">
- <div class="topbar">
-  <div class="hudbox">
-   <div class="hudtitle" id="hudLine">MTR SIMULATOR</div>
-   <div class="hudsmall" id="hudLocation">Station</div>
+ <div class="top">
+  <div class="panel">
+   <div class="title" id="lineName">MTR</div>
+   <div class="small" id="location">Station</div>
   </div>
-  <div class="hudright">
-   <div class="hudbox">
-    <div class="hudtitle" id="clock">08:00</div>
-    <div class="hudsmall" id="weather">Hong Kong</div>
-   </div>
-   <button class="hudbtn" id="cameraBtn">CAMERA</button>
-   <button class="hudbtn" id="mapBtn">ROUTE</button>
-   <button class="hudbtn" id="exitBtn">MENU</button>
+  <div class="topright">
+   <div class="panel"><div class="title" id="time">08:00</div><div class="small">SIMULATION TIME</div></div>
+   <button class="hbtn" id="camera">CAMERA</button>
+   <button class="hbtn" id="route">ROUTE</button>
+   <button class="hbtn" id="menuBtn">MENU</button>
   </div>
  </div>
- <div id="crosshair"></div>
- <div id="interaction">WASD to move · E to interact</div>
- <div id="statusbar">Welcome to Hong Kong MTR Simulator</div>
-
- <div id="driverPanel">
-  <div class="driverhead">
-   <b>TRAIN DRIVER CONSOLE</b>
-   <span id="cabState" style="color:#4de2ff;font-size:11px">CAB ACTIVE</span>
+ <div id="prompt">WASD MOVE · E INTERACT</div>
+ <div id="status">Welcome aboard.</div>
+ <div id="cab">
+  <div class="cabhead"><span>TRAIN CONTROL CONSOLE</span><span id="cabStatus" style="color:#4de3f4">READY</span></div>
+  <div class="readouts">
+   <div class="readout"><b id="speed">0</b><small>SPEED KM/H</small></div>
+   <div class="readout"><b id="power">0</b><small>POWER</small></div>
+   <div class="readout"><b id="brake">0</b><small>BRAKE</small></div>
+   <div class="readout"><b id="next">--</b><small>NEXT STOP</small></div>
   </div>
-  <div class="drivergrid">
-   <div class="readout"><b id="speedRead">0</b><small>KM/H</small></div>
-   <div class="readout"><b id="powerRead">0</b><small>POWER</small></div>
-   <div class="readout"><b id="brakeRead">0</b><small>BRAKE</small></div>
-   <div class="readout"><b id="nextRead">--</b><small>NEXT STOP</small></div>
-  </div>
-  <div class="driverbuttons">
-   <button class="secondary" id="powerDown">POWER −</button>
-   <button class="secondary" id="powerUp">POWER +</button>
+  <div class="cabbuttons">
+   <button class="secondary" id="pDown">POWER −</button>
+   <button class="secondary" id="pUp">POWER +</button>
    <button class="danger" id="brakeBtn">BRAKE</button>
-   <button class="secondary" id="doorBtn">DOORS</button>
+   <button class="secondary" id="doors">DOORS</button>
   </div>
  </div>
-
- <div id="mobileControls">
+ <div id="mobile">
   <div class="pad">
    <button class="up" data-key="w">▲</button>
    <button class="left" data-key="a">◀</button>
    <button class="down" data-key="s">▼</button>
    <button class="right" data-key="d">▶</button>
   </div>
-  <div class="actionpad">
-   <button id="mobileInteract">E<br>USE</button>
-   <button id="mobileJump">JUMP</button>
-   <button id="mobileBrake">BRAKE</button>
-   <button id="mobileCam">CAM</button>
+  <div class="act">
+   <button id="use">E<br>USE</button><button id="jump">JUMP</button>
+   <button id="mBrake">BRAKE</button><button id="mCamera">CAM</button>
   </div>
  </div>
 </div>
 
-<div id="mapPanel" class="hidden">
- <b>ROUTE INFORMATION</b>
- <p id="mapRoute" class="muted"></p>
- <button class="hudbtn" id="closeMap">CLOSE</button>
+<div id="map" class="hidden">
+ <b>LINE STATIONS</b><p id="routeText" style="color:#a9bdd0;line-height:1.7"></p>
+ <button class="hbtn" id="closeMap">CLOSE</button>
 </div>
-
 <div id="toast"></div>
 
 <script type="importmap">
-{
- "imports":{
-  "three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"
- }
-}
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"}}
 </script>
 
 <script type="module">
 import * as THREE from "three";
 
-/* -------------------------------------------------------
-   HONG KONG RAILWAY DATA
-------------------------------------------------------- */
+/* =========================================================
+   ROUTE AND TRAIN DATA
+========================================================= */
 
-const LINES = {
+const LINES={
  "Tsuen Wan Line":{
   color:"#e51d45",
   stations:["Central","Admiralty","Tsim Sha Tsui","Jordan","Yau Ma Tei","Mong Kok","Prince Edward","Sham Shui Po","Cheung Sha Wan","Lai Chi Kok","Mei Foo","Lai King","Kwai Fong","Kwai Hing","Tai Wo Hau","Tsuen Wan"],
-  trains:["MTR Urban Line Train","M-Train (Historic style)"]
+  trains:["Urban Line Train","M-Train inspired set"]
  },
  "Island Line":{
   color:"#0072bc",
   stations:["Kennedy Town","HKU","Sai Ying Pun","Sheung Wan","Central","Admiralty","Wan Chai","Causeway Bay","Tin Hau","Fortress Hill","North Point","Quarry Bay","Tai Koo","Sai Wan Ho","Shau Kei Wan","Heng Fa Chuen","Chai Wan"],
-  trains:["MTR Urban Line Train","MTR Q-Train style"]
+  trains:["Urban Line Train","Q-Train inspired set"]
  },
  "Kwun Tong Line":{
   color:"#00a650",
   stations:["Whampoa","Ho Man Tin","Yau Ma Tei","Mong Kok","Prince Edward","Shek Kip Mei","Kowloon Tong","Lok Fu","Wong Tai Sin","Diamond Hill","Choi Hung","Kowloon Bay","Ngau Tau Kok","Kwun Tong","Lam Tin","Yau Tong","Tiu Keng Leng"],
-  trains:["MTR Urban Line Train","MTR Q-Train style"]
+  trains:["Urban Line Train","Q-Train inspired set"]
  },
  "Tung Chung Line":{
   color:"#f7941d",
   stations:["Hong Kong","Kowloon","Olympic","Nam Cheong","Lai King","Tsing Yi","Sunny Bay","Tung Chung"],
-  trains:["MTR Tung Chung Line Train"]
+  trains:["Tung Chung Line Train"]
  },
  "Tseung Kwan O Line":{
   color:"#7b2d8e",
   stations:["North Point","Quarry Bay","Yau Tong","Tiu Keng Leng","Tseung Kwan O","Hang Hau","Po Lam","LOHAS Park"],
-  trains:["MTR Tseung Kwan O Train"]
+  trains:["Tseung Kwan O Train"]
  },
  "South Island Line":{
   color:"#b5bd00",
   stations:["Admiralty","Ocean Park","Wong Chuk Hang","Lei Tung","South Horizons"],
-  trains:["MTR South Island Line Train"]
+  trains:["South Island Line Train"]
  },
  "East Rail Line":{
   color:"#5b2c83",
   stations:["Admiralty","Exhibition Centre","Hung Hom","Mong Kok East","Kowloon Tong","Tai Wai","Sha Tin","Fo Tan","Racecourse","University","Tai Po Market","Tai Wo","Fanling","Sheung Shui","Lo Wu","Lok Ma Chau"],
-  trains:["MTR R-Train","East Rail Line Train"]
+  trains:["R-Train inspired set","East Rail Line Train"]
  },
  "Tuen Ma Line":{
   color:"#923f91",
   stations:["Tuen Mun","Siu Hong","Tin Shui Wai","Long Ping","Yuen Long","Kam Sheung Road","Tsuen Wan West","Mei Foo","Nam Cheong","Austin","East Tsim Sha Tsui","Hung Hom","Ho Man Tin","Diamond Hill","Kai Tak","Sung Wong Toi","To Kwa Wan","Ma Tau Wai","Hin Keng","Tai Wai"],
-  trains:["MTR Tuen Ma Line Train"]
+  trains:["Tuen Ma Line Train"]
  },
  "Airport Express":{
   color:"#008b8b",
@@ -343,660 +276,904 @@ const LINES = {
  }
 };
 
-const $ = id => document.getElementById(id);
-let selectedLine = "Tsuen Wan Line";
-let selectedTrain = "";
-let selectedStation = "Central";
-let gameMode = "driver";
+const $=id=>document.getElementById(id);
+const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
+const rand=(a,b)=>a+Math.random()*(b-a);
+const choose=a=>a[Math.floor(Math.random()*a.length)];
+
+let lineName="Tsuen Wan Line",trainName="",mode="driver",stationName="Central";
+let stations=[],stationIndex=0;
+let quality="high",hour=8;
 let scene,camera,renderer,clock;
-let player,train,trainGroup,platform,stationGroup,worldGroup;
-let npcGroup,carGroup,doorGroup,signalGroup;
-let started=false, seated=false, inTrain=false, doorsOpen=true;
-let trainSpeed=0,power=0,brake=0,trainDistance=0;
-let timeHours=8,elapsedTime=0;
-let cameraMode=0,quality="high";
-let keys={};
-let yaw=0,pitch=0;
-let pointerDown=false,lastPointer={x:0,y:0};
-let playerVelocity=new THREE.Vector3();
-let interactionTarget=null;
-let nextStationIndex=0;
-let announcementTimer=0;
-let npcData=[];
-let worldObjects=[];
+let world,trainGroup,trainInterior,platformGroup,player,npcGroup,trafficGroup;
+let railsGroup,signalGroup,buildingGroup;
+let started=false,paused=false,insideTrain=false,seated=false;
+let doorsOpen=true,trainSpeed=0,power=0,brake=0;
+let trainProgress=0,stationTravel=220;
+let cameraMode=0,yaw=Math.PI,pitch=0;
+let keys={},pointerDown=false,lastPointer={x:0,y:0};
+let npcList=[],trafficList=[],trafficLightTimer=0,trafficGreen=true;
+let elapsed=0,jumping=false,jumpV=0;
+let playerSpeed=7;
+let nextStopIndex=0;
 let animationId=0;
-let isJumping=false,jumpVelocity=0;
-let lastFrame=0;
-let playerHeight=1.7;
-let trainMaxSpeed=100;
-let stationLength=150;
-let currentStation="Central";
-let activeLineData=LINES[selectedLine];
+let textures={};
 
-const MAT = (color,roughness=.8,metalness=0)=>new THREE.MeshStandardMaterial({color,roughness,metalness});
-const materials={
- floor:MAT("#303d48"),
- wall:MAT("#9aa7b2"),
- dark:MAT("#1c2934"),
- glass:new THREE.MeshStandardMaterial({color:"#68c8df",metalness:.15,roughness:.15,transparent:true,opacity:.28}),
- red:MAT("#e51d45"),
- yellow:MAT("#f2ca38"),
- white:MAT("#e8edf0"),
- black:MAT("#101820"),
- steel:MAT("#657581",.35,.7),
- green:MAT("#30b66a"),
- blue:MAT("#168ac0")
-};
+const mats={};
 
-function showToast(message){
- const el=$("toast");
- el.textContent=message;
- el.classList.add("show");
- clearTimeout(showToast.timer);
- showToast.timer=setTimeout(()=>el.classList.remove("show"),2100);
-}
-function setStatus(message){$("statusbar").textContent=message}
-function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
-function rand(a,b){return a+Math.random()*(b-a)}
-
-function initMenu(){
- const line=$("lineSelect");
- Object.keys(LINES).forEach(name=>{
-  const op=document.createElement("option");
-  op.value=name;op.textContent=name;line.appendChild(op);
- });
- line.value=selectedLine;
- updateTrainOptions();
- line.addEventListener("change",()=>{
-  selectedLine=line.value;
-  updateTrainOptions();
-  updateStations();
- });
- $("modeSelect").addEventListener("change",e=>gameMode=e.target.value);
- $("stationSelect").addEventListener("change",e=>selectedStation=e.target.value);
- $("startBtn").addEventListener("click",startGame);
- $("helpBtn").addEventListener("click",()=>{
-  showToast("WASD move · Mouse/touch look · E interact · C camera · Space jump · F brake · G doors");
- });
- $("qualitySelect").addEventListener("change",e=>quality=e.target.value);
- updateStations();
-}
-function updateTrainOptions(){
- const sel=$("trainSelect");sel.innerHTML="";
- LINES[selectedLine].trains.forEach(t=>{
-  const o=document.createElement("option");o.value=t;o.textContent=t;sel.appendChild(o);
- });
- selectedTrain=sel.value;
-}
-function updateStations(){
- const sel=$("stationSelect");sel.innerHTML="";
- LINES[selectedLine].stations.forEach(s=>{
-  const o=document.createElement("option");o.value=s;o.textContent=s;sel.appendChild(o);
- });
- selectedStation=sel.value;
+function material(name,color,roughness=.8,metalness=0){
+ if(mats[name])return mats[name];
+ mats[name]=new THREE.MeshStandardMaterial({color,roughness,metalness});
+ return mats[name];
 }
 
-/* -------------------------------------------------------
-   THREE.JS WORLD
-------------------------------------------------------- */
+/* =========================================================
+   PROCEDURAL TEXTURE GENERATION
+========================================================= */
 
-function makeBox(parent,w,h,d,material,x,y,z){
- const mesh=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),material);
- mesh.position.set(x,y,z);mesh.castShadow=true;mesh.receiveShadow=true;
- parent.add(mesh);return mesh;
+function canvasTexture(draw,w=512,h=512,repeatX=1,repeatY=1){
+ const c=document.createElement("canvas");c.width=w;c.height=h;
+ const ctx=c.getContext("2d");draw(ctx,w,h);
+ const t=new THREE.CanvasTexture(c);
+ t.wrapS=t.wrapT=THREE.RepeatWrapping;
+ t.repeat.set(repeatX,repeatY);
+ t.colorSpace=THREE.SRGBColorSpace;
+ t.anisotropy=8;
+ return t;
 }
-function makeCylinder(parent,r1,r2,h,material,x,y,z,segments=12){
- const mesh=new THREE.Mesh(new THREE.CylinderGeometry(r1,r2,h,segments),material);
- mesh.position.set(x,y,z);mesh.castShadow=true;parent.add(mesh);return mesh;
+
+function createTextures(){
+ textures.concrete=canvasTexture((c,w,h)=>{
+  c.fillStyle="#89939a";c.fillRect(0,0,w,h);
+  for(let i=0;i<15000;i++){
+   const v=Math.random()*70;
+   c.fillStyle=`rgba(${v+100},${v+105},${v+110},${Math.random()*.22})`;
+   c.fillRect(Math.random()*w,Math.random()*h,rand(1,4),rand(1,4));
+  }
+  for(let y=0;y<h;y+=64){
+   c.strokeStyle="#657078";c.lineWidth=3;c.beginPath();c.moveTo(0,y);c.lineTo(w,y);c.stroke();
+  }
+ },512,512,4,4);
+
+ textures.tile=canvasTexture((c,w,h)=>{
+  c.fillStyle="#d6dadd";c.fillRect(0,0,w,h);
+  for(let y=0;y<h;y+=64){
+   for(let x=0;x<w;x+=128){
+    c.fillStyle=(Math.floor(y/64+x/128)%2)?"#c8cfd3":"#e4e7e9";
+    c.fillRect(x+2,y+2,124,60);
+    c.strokeStyle="#aab4ba";c.lineWidth=3;c.strokeRect(x+1,y+1,126,62);
+   }
+  }
+ },512,512,3,2);
+
+ textures.asphalt=canvasTexture((c,w,h)=>{
+  c.fillStyle="#343b42";c.fillRect(0,0,w,h);
+  for(let i=0;i<18000;i++){
+   const v=Math.floor(rand(35,90));
+   c.fillStyle=`rgba(${v},${v},${v},.3)`;
+   c.fillRect(Math.random()*w,Math.random()*h,2,2);
+  }
+ },512,512,5,5);
+
+ textures.rubber=canvasTexture((c,w,h)=>{
+  c.fillStyle="#252b30";c.fillRect(0,0,w,h);
+  for(let i=0;i<1000;i++){
+   c.fillStyle="#353c42";
+   c.fillRect(Math.random()*w,Math.random()*h,rand(2,9),rand(2,9));
+  }
+ },256,256,2,2);
+
+ textures.metal=canvasTexture((c,w,h)=>{
+  const g=c.createLinearGradient(0,0,w,0);
+  g.addColorStop(0,"#68747d");g.addColorStop(.3,"#d0d7db");
+  g.addColorStop(.5,"#8b989f");g.addColorStop(1,"#53616b");
+  c.fillStyle=g;c.fillRect(0,0,w,h);
+  for(let y=0;y<h;y+=8){
+   c.fillStyle="rgba(255,255,255,.08)";c.fillRect(0,y,w,1);
+  }
+ },256,256,2,2);
+
+ textures.wall=new THREE.MeshStandardMaterial({
+  map:textures.tile,roughness:.82
+ });
+ textures.floor=new THREE.MeshStandardMaterial({
+  map:textures.concrete,roughness:.95
+ });
+ textures.road=new THREE.MeshStandardMaterial({
+  map:textures.asphalt,roughness:1
+ });
+ textures.track=new THREE.MeshStandardMaterial({
+  map:textures.rubber,roughness:.95
+ });
+ textures.steel=new THREE.MeshStandardMaterial({
+  map:textures.metal,roughness:.35,metalness:.75
+ });
 }
-function makeTextPanel(parent,text,x,y,z,options={}){
- const canvas=document.createElement("canvas");
- canvas.width=1024;canvas.height=256;
- const ctx=canvas.getContext("2d");
- ctx.fillStyle=options.bg||"#0b253c";ctx.fillRect(0,0,1024,256);
- ctx.fillStyle=options.color||"#fff";
- ctx.font="bold 70px Arial";ctx.textAlign="center";ctx.textBaseline="middle";
- ctx.fillText(text,512,128,950);
- const texture=new THREE.CanvasTexture(canvas);
- const mat=new THREE.MeshBasicMaterial({map:texture,side:THREE.DoubleSide});
- const mesh=new THREE.Mesh(new THREE.PlaneGeometry(options.w||8,options.h||2),mat);
+
+/* =========================================================
+   GEOMETRY HELPERS
+========================================================= */
+
+function box(parent,w,h,d,mat,x,y,z,opts={}){
+ const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);
+ m.position.set(x,y,z);
+ m.castShadow=opts.shadow!==false;
+ m.receiveShadow=true;
+ parent.add(m);
+ return m;
+}
+function cylinder(parent,r1,r2,h,mat,x,y,z,segments=16){
+ const m=new THREE.Mesh(new THREE.CylinderGeometry(r1,r2,h,segments),mat);
+ m.position.set(x,y,z);m.castShadow=true;parent.add(m);return m;
+}
+function sphere(parent,r,mat,x,y,z){
+ const m=new THREE.Mesh(new THREE.SphereGeometry(r,16,12),mat);
+ m.position.set(x,y,z);m.castShadow=true;parent.add(m);return m;
+}
+function textPanel(parent,text,x,y,z,w=8,h=1.5,bg="#082944",fg="#ffffff"){
+ const c=document.createElement("canvas");c.width=1024;c.height=256;
+ const ctx=c.getContext("2d");
+ ctx.fillStyle=bg;ctx.fillRect(0,0,1024,256);
+ ctx.fillStyle=fg;ctx.font="bold 76px Arial";ctx.textAlign="center";ctx.textBaseline="middle";
+ ctx.fillText(text,512,128,970);
+ const tex=new THREE.CanvasTexture(c);tex.colorSpace=THREE.SRGBColorSpace;
+ const mesh=new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({map:tex,side:THREE.DoubleSide}));
  mesh.position.set(x,y,z);parent.add(mesh);return mesh;
 }
 
+/* =========================================================
+   WORLD AND LIGHTING
+========================================================= */
+
 function createWorld(){
  scene=new THREE.Scene();
- const hour=timeHours;
- const night=hour<6||hour>=19;
- scene.background=new THREE.Color(night?"#101e35":"#8ab5d3");
- scene.fog=new THREE.Fog(night?"#101e35":"#8ab5d3",70,260);
+ const night=hour>=19||hour<6;
+ scene.background=new THREE.Color(night?"#101c32":"#8db6d1");
+ scene.fog=new THREE.Fog(night?"#101c32":"#8db6d1",90,300);
 
- camera=new THREE.PerspectiveCamera(75,innerWidth/innerHeight,.1,600);
- camera.position.set(0,2,8);
-
- renderer=new THREE.WebGLRenderer({antialias:quality!=="low",powerPreference:"high-performance"});
+ camera=new THREE.PerspectiveCamera(75,innerWidth/innerHeight,.1,800);
+ renderer=new THREE.WebGLRenderer({antialias:quality==="high",powerPreference:"high-performance"});
  renderer.setSize(innerWidth,innerHeight);
- renderer.setPixelRatio(Math.min(devicePixelRatio,quality==="high"?1.8:1.2));
+ renderer.setPixelRatio(Math.min(devicePixelRatio,quality==="high"?1.8:1.25));
  renderer.shadowMap.enabled=quality!=="low";
  renderer.shadowMap.type=THREE.PCFSoftShadowMap;
  renderer.toneMapping=THREE.ACESFilmicToneMapping;
- renderer.toneMappingExposure=1.05;
- $("game").innerHTML="";
- $("game").appendChild(renderer.domElement);
-
+ renderer.toneMappingExposure=1.1;
+ $("game").replaceChildren(renderer.domElement);
  clock=new THREE.Clock();
- const hemi=new THREE.HemisphereLight(0xc5e6ff,0x39414a,night?.8:1.5);
+
+ const hemi=new THREE.HemisphereLight(0xd8edff,0x37434c,night?.75:1.5);
  scene.add(hemi);
- const sun=new THREE.DirectionalLight(night?0x91b8ff:0xffffff,night?.7:2.2);
- sun.position.set(-40,70,30);sun.castShadow=quality==="high";
- sun.shadow.mapSize.set(1024,1024);
+ const sun=new THREE.DirectionalLight(night?0x9bbfff:0xffffff,night?.8:2);
+ sun.position.set(-35,65,30);
+ sun.castShadow=quality==="high";
+ sun.shadow.mapSize.set(quality==="high"?2048:1024,1024);
  scene.add(sun);
 
- worldGroup=new THREE.Group();scene.add(worldGroup);
- stationGroup=new THREE.Group();worldGroup.add(stationGroup);
- npcGroup=new THREE.Group();worldGroup.add(npcGroup);
- carGroup=new THREE.Group();worldGroup.add(carGroup);
- signalGroup=new THREE.Group();worldGroup.add(signalGroup);
- doorGroup=new THREE.Group();worldGroup.add(doorGroup);
+ world=new THREE.Group();scene.add(world);
+ platformGroup=new THREE.Group();world.add(platformGroup);
+ railsGroup=new THREE.Group();world.add(railsGroup);
+ buildingGroup=new THREE.Group();world.add(buildingGroup);
+ signalGroup=new THREE.Group();world.add(signalGroup);
+ npcGroup=new THREE.Group();world.add(npcGroup);
+ trafficGroup=new THREE.Group();world.add(trafficGroup);
 
- buildEnvironment();
- buildPlatform();
- buildTrack();
- buildTrain();
- buildPlayer();
- buildNPCs();
- buildCars();
- buildSignals();
- buildStationFacilities();
+ createTextures();
+ createStation();
+ createRailway();
+ createTrain();
+ createPlayer();
+ createPassengers();
+ createTraffic();
+ createSignals();
+ createCity();
 }
 
-function buildEnvironment(){
- // Main station floor
- makeBox(stationGroup,180,.5,70,materials.floor,0,-.3,0);
- // Ceiling panels
- for(let z=-22;z<=22;z+=8){
-  makeBox(stationGroup,150,.4,7,MAT("#465563"),0,8,z);
-  for(let x=-65;x<=65;x+=16){
-   const light=makeBox(stationGroup,5,.08,.7,MAT("#d6f4ff"),x,7.72,z);
-   light.material.emissive=new THREE.Color("#7ab9dc");
-   light.material.emissiveIntensity=.45;
+/* =========================================================
+   STATION ENVIRONMENT
+========================================================= */
+
+function createStation(){
+ // station floor and platform
+ box(platformGroup,190,.6,65,textures.floor,0,-.35,0);
+ box(platformGroup,190,.7,8,material("platformConcrete","#aab4bb"),0,.1,6);
+ // tactile strip and warning line
+ box(platformGroup,190,.08,1.25,material("yellow","#f4d33e"),0,.51,10);
+ box(platformGroup,190,.06,.28,material("redStrip","#d72b43"),0,.54,6.5);
+ for(let z=9.1;z<10.8;z+=.35){
+  for(let x=-92;x<92;x+=1.2){
+   box(platformGroup,.12,.035,.12,material("tactile","#e8bd43"),x,.57,z,{shadow:false});
   }
  }
- // Pillars
- for(let x=-65;x<=65;x+=15){
-  for(let z of [-17,17]){
-   makeBox(stationGroup,1.3,8,1.3,MAT("#aab4bc"),x,3.8,z);
-   makeBox(stationGroup,1.7,.3,1.7,MAT("#e51d45"),x,6.8,z);
+ // walls and ceiling
+ box(platformGroup,190,.5,50,material("ceiling","#475b6b"),0,9,-8);
+ for(let z=-30;z<=24;z+=9){
+  box(platformGroup,190,.3,1.3,material("ceilingBeam","#344857"),0,8.5,z);
+ }
+ // tiled back wall
+ box(platformGroup,190,7,.5,textures.wall,0,4,-32);
+ // columns
+ for(let x=-85;x<=85;x+=17){
+  for(const z of [-25,20]){
+   box(platformGroup,1.5,8,1.5,material("column","#aeb9c0"),x,4,z);
+   box(platformGroup,1.8,.3,1.8,material("columnCap","#dce1e4"),x,7.7,z);
   }
  }
- // Background Hong Kong skyline beyond station
- const city=new THREE.Group();worldGroup.add(city);
- const buildingColors=["#596a7c","#a0a8ae","#596c79","#788d9a","#394e60"];
- for(let i=0;i<42;i++){
-  const x=rand(-150,150),z=rand(-115,-70);
-  const h=rand(20,75),w=rand(7,16),d=rand(7,14);
-  const b=makeBox(city,w,h,d,MAT(buildingColors[i%buildingColors.length]),x,h/2-1,z);
-  if(i%3===0){
-   for(let y=5;y<h-4;y+=5){
-    for(let xx=-w/2+1;xx<w/2-1;xx+=2.5){
-     makeBox(city,.7,1.4,.12,MAT("#a9d8e9"),x+xx,y,z+d/2+.08);
-    }
-   }
-  }
+ // roof lighting
+ for(let x=-85;x<=85;x+=12){
+  const light=box(platformGroup,5,.12,.65,material("light","#dff6ff"),x,8.1,-5);
+  light.material.emissive=new THREE.Color("#a9ddff");
+  light.material.emissiveIntensity=.6;
  }
- // Tunnel/track end structure
- makeBox(stationGroup,5,7,65,MAT("#18232d"),-78,3,0);
- makeBox(stationGroup,5,7,65,MAT("#18232d"),78,3,0);
- // Roof fascia
- makeBox(stationGroup,150,.8,1.3,MAT("#d9e0e5"),0,7.6,0);
+ // station signs
+ textPanel(platformGroup,"MTR  ·  "+stationName.toUpperCase(),0,6.5,-31,17,2,"#092a46","#ffffff");
+ textPanel(platformGroup,"EXIT  ·  TICKETS  ·  CUSTOMER SERVICE",0,5,25,20,1.5,"#092a46","#ffffff");
+ textPanel(platformGroup,"NEXT TRAIN  "+stationName.toUpperCase(),-24,5,3,11,2,"#071b2c","#ffe17b");
+ // benches
+ for(let x=-60;x<=60;x+=30){
+  box(platformGroup,5,.3,1.1,material("bench","#293d4c"),x,1,13);
+  for(let xx of [-2,2])box(platformGroup,.18,1,.18,material("benchLeg","#687781"),x+xx,.5,13);
+ }
+ // ticket gates
+ for(let x=-20;x<=20;x+=3){
+  box(platformGroup,1.25,1,.9,material("gate","#445b6a"),x,.6,26);
+  box(platformGroup,.08,.55,.12,material("gateLight","#40d7ef"),x,1.25,26);
+ }
+ // stairs and escalator
+ for(let i=0;i<15;i++){
+  box(platformGroup,2,.15,.75,material("step","#7c8991"),30+i*.65,.1+i*.16,20-i*.65);
+ }
+ box(platformGroup,12,.25,1,material("escalator","#263846"),35,1.3,14);
+ // Platform screen doors, with some stations having open platforms
+ const hasPSD=!["Central","Admiralty","Hung Hom","Lo Wu","Lok Ma Chau","Racecourse"].includes(stationName);
+ if(hasPSD)createPlatformDoors();
 }
 
-function buildPlatform(){
- platform=new THREE.Group();stationGroup.add(platform);
- // Platform along one side
- makeBox(platform,150,.7,8,MAT("#b5bdc5"),0,0,7);
- makeBox(platform,150,.12,1.1,MAT("#f3d34a"),0,.42,10.2);
- makeBox(platform,150,.1,.35,MAT("#e51d45"),0,.46,6.6);
- // Tactile paving
- for(let x=-73;x<=73;x+=2.5){
-  makeBox(platform,.12,.08,.8,MAT("#e7b72e"),x,.46,9.5);
- }
- // Benches
- for(let x=-35;x<=35;x+=35){
-  makeBox(platform,5,.25,1.2,MAT("#263f50"),x,1,12);
-  for(let xx of [-2,2])makeBox(platform,.2,1,.2,materials.steel,x+xx,.6,12);
- }
- // PSDs on selected station types
- const hasPSD=!["Central","Admiralty","Hung Hom","Lo Wu","Lok Ma Chau"].includes(currentStation);
- if(hasPSD){
-  for(let x=-73;x<=73;x+=4){
-   const panel=new THREE.Group();doorGroup.add(panel);
-   makeBox(panel,3.5,2.5,.22,materials.glass,0,1.7,4.3);
-   makeBox(panel,3.5,.18,.3,materials.steel,0,3,4.3);
-   makeBox(panel,.12,2.5,.35,materials.steel,-1.7,1.7,4.3);
-   makeBox(panel,.12,2.5,.35,materials.steel,1.7,1.7,4.3);
-   makeBox(panel,1.4,.12,.4,MAT("#e9d348"),0,1.5,4.2);
-   panel.position.x=x;
-  }
- }
- makeTextPanel(platform,"MTR  ·  "+currentStation.toUpperCase(),0,5.5,3.7,{w:13,h:2,bg:"#092d4b"});
-}
-
-function buildTrack(){
- const trackMat=MAT("#4a535b",.35,.8);
- const sleeperMat=MAT("#303940");
- for(const z of [-2.2,2.2]){
-  makeBox(stationGroup,180,.22,.22,trackMat,0,-.1,z);
- }
- for(let x=-88;x<90;x+=2.5){
-  makeBox(stationGroup,.35,.18,6,sleeperMat,x,-.28,0);
- }
- // Rails and overhead details
- for(const x of [-4.5,4.5]){
-  makeBox(stationGroup,180,.16,.16,materials.steel,0,4.8,x);
- }
- for(let x=-80;x<=80;x+=12){
-  makeBox(stationGroup,.2,4.8,.2,MAT("#5b6670"),x,2.2,0);
+function createPlatformDoors(){
+ const psdMat=new THREE.MeshStandardMaterial({
+  color:"#91d7e8",roughness:.18,metalness:.2,transparent:true,opacity:.38
+ });
+ for(let z=-85;z<=85;z+=4.2){
+  const g=new THREE.Group();
+  box(g,3.8,2.5,.12,psdMat,0,1.8,0,{shadow:false});
+  box(g,.12,2.8,.2,textures.steel,-1.9,1.8,0);
+  box(g,.12,2.8,.2,textures.steel,1.9,1.8,0);
+  box(g,3.8,.12,.2,material("psdTop","#d8e0e4"),0,3.2,0);
+  box(g,1.2,.12,.24,material("psdYellow","#eacb3f"),0,1.3,.02);
+  g.position.set(3.7,0,z);
+  platformGroup.add(g);
  }
 }
 
-function buildTrain(){
- trainGroup=new THREE.Group();scene.add(trainGroup);
- train=new THREE.Group();trainGroup.add(train);
- const bodyMat=MAT("#d7dce0",.4,.25);
- const accent=MAT("#e51d45",.4,.1);
- // Simplified train body
- makeBox(train,26,3.5,4.5,bodyMat,0,2.2,0);
- makeBox(train,26,.48,4.58,accent,0,3.2,0);
- makeBox(train,26,.22,4.58,MAT("#182a3a"),0,.62,0);
- // Front/rear faces
- for(const x of [-13.05,13.05]){
-  makeBox(train,.15,2.7,4.3,bodyMat,x,2.2,0);
-  makeBox(train,.18,1.05,2.3,MAT("#152c40"),x,2.9,0);
-  makeBox(train,.12,.18,1.2,MAT("#f7f4dc"),x,1.35,-1.5);
-  makeBox(train,.12,.18,1.2,MAT("#f7f4dc"),x,1.35,1.5);
+/* =========================================================
+   RAILWAY: CONTINUOUS RAILS, SLEEPERS, TRACK BED
+========================================================= */
+
+function createRailway(){
+ // Ballast bed
+ box(railsGroup,7,.55,230,material("ballast","#343c42"),0,-.62,0);
+ // Continuous steel rails
+ for(const x of [-1.15,1.15]){
+  box(railsGroup,.16,.2,230,textures.steel,x,-.18,0);
+  box(railsGroup,.32,.1,230,material("railBase","#454e55"),x,-.32,0);
  }
- // Windows both sides
- for(let x=-11;x<=11;x+=3.2){
-  for(const z of [-2.28,2.28]){
-   makeBox(train,2.3,1.15,.07,materials.glass,x,2.55,z);
-   makeBox(train,.08,1.3,.1,materials.steel,x-1.18,2.55,z);
-   // doors
-   if(Math.abs(x%6.4)<.5){
-    makeBox(train,1.1,2.1,.08,MAT("#aab6c1"),x,1.8,z);
-   }
-  }
+ // sleepers
+ for(let z=-114;z<=114;z+=1.35){
+  box(railsGroup,3.8,.19,.42,material("sleeper","#373d40"),0,-.39,z);
  }
- // Wheels
- for(let x=-9;x<=9;x+=6){
-  for(let z of [-1.85,1.85]){
-   makeCylinder(train,.58,.58,.35,MAT("#242b31"),x,.52,z,16).rotation.x=Math.PI/2;
-  }
+ // track shoulder details
+ for(const x of [-2.5,2.5]){
+  box(railsGroup,.2,.35,230,material("trackEdge","#656e72"),x,-.45,0);
  }
- // Interior floor and seats visible through windows
- makeBox(train,23,.12,3.8,MAT("#596b79"),0,1,0);
- for(let x=-9;x<=9;x+=3){
-  for(let z of [-1.1,1.1]){
-   makeBox(train,1.5,.65,.65,MAT("#416b87"),x,1.4,z);
-   makeBox(train,1.5,.65,.12,MAT("#416b87"),x,1.85,z+(z>0?.28:-.28));
-  }
+ // Third rail / cable channel approximation
+ box(railsGroup,.16,.12,220,material("cable","#222c34"),2.4,-.02,0);
+ // Overhead supports
+ for(let z=-105;z<=105;z+=18){
+  box(railsGroup,.22,6,.22,material("overheadSteel","#697983"),-3,2.5,z);
+  box(railsGroup,.22,6,.22,material("overheadSteel","#697983"),3,2.5,z);
+  box(railsGroup,6,.16,.16,textures.steel,0,5.4,z);
  }
- // Driver cab
- makeBox(train,2.5,2.2,3.6,MAT("#253849"),-11.6,2,0);
- makeBox(train,.1,1.4,2.4,materials.glass,-12.9,2.7,0);
- // Destination sign
- makeTextPanel(train,"MTR  ·  "+selectedLine.toUpperCase(),0,4.15,-2.3,{w:7,h:1,bg:"#0a263e",color:"#7ff0ff"});
- trainGroup.position.set(0,0,-30);
- trainGroup.rotation.y=0;
- trainGroup.userData.baseZ=-30;
+ // Rails continue through tunnel portals
+ for(const z of [-120,120]){
+  box(railsGroup,8,8,1,material("tunnelDark","#17232c"),0,3,z);
+  box(railsGroup,7,.4,1,material("tunnelEdge","#71808a"),0,7,z);
+ }
 }
 
-function buildPlayer(){
+/* =========================================================
+   TRAIN MODEL
+========================================================= */
+
+let trainDoors=[],doorAnimation=0;
+let doorTarget=0;
+
+function createTrain(){
+ trainGroup=new THREE.Group();
+ scene.add(trainGroup);
+ trainGroup.position.set(0,0,0);
+
+ const shell=material("trainShell","#d8dfe3",.38,.3);
+ const red=material("trainRed","#df2146",.42,.15);
+ const dark=material("trainDark","#15232e",.3,.35);
+ const glass=new THREE.MeshStandardMaterial({
+  color:"#70b8d0",roughness:.12,metalness:.25,transparent:true,opacity:.67
+ });
+ // Main body, train length along Z
+ box(trainGroup,4.2,3.65,42,shell,0,2.15,0);
+ box(trainGroup,4.24,.45,42.1,red,0,3.4,0);
+ box(trainGroup,4.24,.2,42,dark,0,.55,0);
+ // front and rear cab shapes
+ for(const z of [-21,21]){
+  box(trainGroup,4.1,3.5,.25,shell,0,2.15,z);
+  box(trainGroup,2.8,1.3,.16,dark,0,2.8,z*1.006);
+  box(trainGroup,.7,.16,.15,material("headlamp","#fff1c1"),-1.35,1.3,z*1.006);
+  box(trainGroup,.7,.16,.15,material("headlamp2","#fff1c1"),1.35,1.3,z*1.006);
+ }
+ // side windows and door frames
+ trainDoors=[];
+ for(const side of [-1,1]){
+  for(let z=-18;z<=18;z+=5.8){
+   box(trainGroup,.08,1.35,3.25,glass,side*2.12,2.65,z);
+   box(trainGroup,.12,1.5,.12,textures.steel,side*2.15,2.65,z-1.7);
+   box(trainGroup,.12,1.5,.12,textures.steel,side*2.15,2.65,z+1.7);
+   const door=new THREE.Group();
+   box(door,.1,2.15,1.15,material("door","#b9c5cc"),0,1.65,0);
+   box(door,.12,1,.85,glass,0,2.05,0);
+   door.position.set(side*2.14,0,z+2.05);
+   trainGroup.add(door);trainDoors.push({group:door,side,z});
+  }
+ }
+ // roof equipment
+ box(trainGroup,2.4,.35,8,material("roofUnit","#59666e"),0,4.1,-7);
+ box(trainGroup,2.4,.35,8,material("roofUnit2","#59666e"),0,4.1,7);
+ // wheels and bogies
+ for(const z of [-14,-7,7,14]){
+  for(const x of [-1.55,1.55]){
+   const wheel=cylinder(trainGroup,.53,.53,.28,material("wheel","#242b30"),x,.55,z,20);
+   wheel.rotation.z=Math.PI/2;
+  }
+  box(trainGroup,3.4,.3,2.8,material("bogie","#343d44"),0,.45,z);
+ }
+ // destination sign
+ textPanel(trainGroup,stationName.toUpperCase()+"  ·  "+lineName.toUpperCase(),0,4.2,-8,13,1.1,"#09283d","#a5f4ff");
+ // interior floor and seats
+ trainInterior=new THREE.Group();trainGroup.add(trainInterior);
+ box(trainInterior,3.7,.12,40,material("interiorFloor","#687b86"),0,1,0);
+ for(let z=-17;z<=17;z+=3.8){
+  for(const x of [-1.25,1.25]){
+   box(trainInterior,1.05,.65,.95,material("seat","#356d91"),x,1.4,z);
+   box(trainInterior,1.05,.65,.15,material("seatBack","#285773"),x,1.75,z+(x>0?.4:-.4));
+  }
+ }
+ // overhead handrails
+ for(const x of [-1.3,1.3]){
+  box(trainInterior,.08,.08,35,textures.steel,x,3.25,0);
+  for(let z=-16;z<=16;z+=2.5){
+   box(trainInterior,.05,.7,.05,textures.steel,x,2.9,z);
+  }
+ }
+ // cab partition and controls
+ box(trainInterior,3.4,2.4,.15,material("cabPartition","#273d4e"),0,2.2,-18.5);
+ box(trainInterior,2.5,.15,1.2,material("console","#111d27"),0,1.5,-19);
+ for(let i=0;i<5;i++){
+  const b=box(trainInterior,.28,.1,.3,material("consoleButton",choose(["#dc334e","#37c6dd","#d9b847"])), -1+i*.5,1.62,-19);
+  b.material.emissive=new THREE.Color(b.material.color);b.material.emissiveIntensity=.15;
+ }
+ box(trainInterior,.85,1,.85,material("driverSeat","#283b4c"),0,1.2,-17.8);
+ trainGroup.userData.doors=trainDoors;
+}
+
+/* =========================================================
+   PLAYER
+========================================================= */
+
+function createPlayer(){
  player=new THREE.Group();
  scene.add(player);
- const body=makeBox(player,.55,1,.35,MAT("#2377a7"),0,.85,0);
- const head=makeCylinder(player,.22,.22,.42,MAT("#d7a47c"),0,1.55,0,16);
- head.rotation.x=Math.PI/2;
- makeBox(player,.6,.16,.4,MAT("#1b2835"),0,.25,0);
- player.position.set(0,0,14);
- yaw=Math.PI;
+ const skin=material("skin","#c8916d");
+ const shirt=material("playerShirt","#2479a6");
+ const trousers=material("trousers","#25374b");
+ const body=box(player,.55,.85,.32,shirt,0,1,0);
+ box(player,.23,.55,.23,trousers,-.16,.32,0);
+ box(player,.23,.55,.23,trousers,.16,.32,0);
+ sphere(player,.22,skin,0,1.62,0);
+ box(player,.58,.08,.35,material("shoes","#20242a"),0,.05,0);
+ player.position.set(-8,0,13);
 }
 
-function buildNPCs(){
- npcData=[];
- const count=quality==="low"?8:quality==="medium"?14:24;
- for(let i=0;i<count;i++){
-  const npc=new THREE.Group();
-  const colors=["#276b9c","#d4a43b","#9c4262","#367d5c","#7771aa","#b3b8c1"];
-  const shirt=MAT(colors[i%colors.length]);
-  makeBox(npc,.48,.85,.32,shirt,0,.85,0);
-  makeCylinder(npc,.2,.2,.38,MAT("#d5a17b"),0,1.48,0,12).rotation.x=Math.PI/2;
-  for(let z of [-.12,.12])makeBox(npc,.14,.65,.14,MAT("#202d3a"),z*2,.35,0);
-  npc.position.set(rand(-65,65),0,rand(8,13));
-  npc.userData={direction:Math.random()<.5?-1:1,speed:rand(.3,.8),wait:rand(0,4),origin:npc.position.x};
-  npcGroup.add(npc);npcData.push(npc);
+/* =========================================================
+   AI PASSENGERS
+========================================================= */
+
+const npcShirts=["#276b9c","#b34d5c","#32845d","#b58b39","#655c9a","#687d8d","#d16d39"];
+function createPassenger(index){
+ const g=new THREE.Group();
+ const shirt=material("npcShirt"+index,choose(npcShirts));
+ const skin=material("npcSkin"+index,choose(["#d7a27e","#b97855","#e4b99b","#9a634b"]));
+ const pants=material("npcPants"+index,choose(["#26394d","#414b59","#30343b","#655b50"]));
+ box(g,.42,.75,.3,shirt,0,1,0);
+ box(g,.18,.6,.18,pants,-.13,.35,0);
+ box(g,.18,.6,.18,pants,.13,.35,0);
+ sphere(g,.19,skin,0,1.53,0);
+ // hair
+ sphere(g,.2,material("npcHair"+index,choose(["#292421","#3b2c25","#1d2025"])),0,1.66,0);
+ // arms
+ for(const x of [-.28,.28]){
+  const arm=box(g,.12,.58,.13,shirt,x,1,0);
+  arm.rotation.z=x<0?-.12:.12;
  }
+ g.position.set(rand(-85,85),0,rand(11,16));
+ g.userData={
+  state:"walk",speed:rand(.55,1.35),direction:Math.random()<.5?-1:1,
+  wait:rand(1,5),targetX:rand(-80,80),targetZ:rand(11,16),
+  boarding:false,phase:Math.random()*6
+ };
+ npcGroup.add(g);npcList.push(g);
+ return g;
 }
-function buildCars(){
- const colors=["#d6dce2","#b9c3ce","#e4c35c","#bc3e46","#3b6680"];
- for(let i=0;i<8;i++){
-  const car=new THREE.Group();
-  makeBox(car,4,1.3,1.8,MAT(colors[i%colors.length]),0,.8,0);
-  makeBox(car,2.4,.7,1.65,materials.glass,0,1.65,0);
-  for(let x of [-1.2,1.2])for(let z of [-.75,.75])
-   makeCylinder(car,.36,.36,.2,MAT("#20252b"),x,.4,z,12).rotation.x=Math.PI/2;
-  car.position.set(rand(-75,75),0,rand(-40,-28));
-  car.userData.speed=rand(2,7);
-  carGroup.add(car);
- }
+function createPassengers(){
+ npcList=[];
+ const count=quality==="low"?12:quality==="medium"?22:34;
+ for(let i=0;i<count;i++)createPassenger(i);
 }
-function buildSignals(){
- for(let x of [-50,-20,20,50]){
-  makeBox(signalGroup,.25,5,.25,MAT("#394752"),x,2.5,-5);
-  makeBox(signalGroup,.8,1.7,.55,MAT("#141d25"),x,4.7,-5);
-  const lamp=makeCylinder(signalGroup,.2,.2,.12,MAT("#32d36d"),x,5.1,-4.7,16);
-  lamp.rotation.x=Math.PI/2;
-  makeCylinder(signalGroup,.2,.2,.12,MAT("#d83c42"),x,4.35,-4.7,16).rotation.x=Math.PI/2;
+function updatePassengers(dt){
+ for(const n of npcList){
+  const u=n.userData;
+  u.phase+=dt*5;
+  if(u.state==="walk"){
+   const dx=u.targetX-n.position.x;
+   const dz=u.targetZ-n.position.z;
+   const dist=Math.hypot(dx,dz);
+   if(dist<1){
+    u.state="wait";u.wait=rand(2,6);
+    u.targetX=rand(-85,85);u.targetZ=rand(11,16);
+   }else{
+    const step=Math.min(dist,u.speed*dt);
+    n.position.x+=dx/dist*step;
+    n.position.z+=dz/dist*step;
+    n.rotation.y=Math.atan2(dx,dz);
+   }
+  }else if(u.state==="wait"){
+   u.wait-=dt;
+   if(u.wait<=0){
+    u.state="walk";
+    u.targetX=rand(-85,85);
+    u.targetZ=rand(11,16);
+   }
+  }
+  n.position.y=Math.abs(Math.sin(u.phase))*.025;
  }
-}
-function buildStationFacilities(){
- // Ticket gates at rear
- for(let x=-18;x<=18;x+=3){
-  makeBox(stationGroup,1.4,1.1,.9,MAT("#455968"),x,0.6,25);
-  makeBox(stationGroup,.08,.65,.15,MAT("#36d4ee"),x,1.2,25);
- }
- makeTextPanel(stationGroup,"EXIT  ·  TICKETS  ·  CUSTOMER SERVICE",0,4.2,24,{w:20,h:2,bg:"#122d46"});
- // PIDS board
- makeBox(stationGroup,9,2.3,.25,MAT("#15232e"),-18,5,5);
- makeTextPanel(stationGroup,"NEXT TRAIN  ·  "+currentStation, -18,5,4.8,{w:8.5,h:1.8,bg:"#071b2b",color:"#f7d957"});
- // Escalator approximation
- for(let i=0;i<12;i++){
-  makeBox(stationGroup,1.5,.15,1.1,MAT("#77858e"),28+i*.7,.1+i*.2,18-i*.7);
- }
- makeBox(stationGroup,11,.3,1.1,MAT("#202b34"),32,1.2,12);
 }
 
-/* -------------------------------------------------------
-   GAME FLOW AND INTERACTIONS
-------------------------------------------------------- */
+/* =========================================================
+   AI ROAD TRAFFIC
+========================================================= */
 
-function startGame(){
- selectedLine=$("lineSelect").value;
- selectedTrain=$("trainSelect").value;
- selectedStation=$("stationSelect").value;
- gameMode=$("modeSelect").value;
- timeHours=Number($("timeSelect").value);
- quality=$("qualitySelect").value;
- activeLineData=LINES[selectedLine];
- currentStation=selectedStation;
- nextStationIndex=Math.max(0,activeLineData.stations.indexOf(currentStation)+1);
- $("menu").classList.add("hidden");
- $("hud").classList.remove("hidden");
- $("hudLine").textContent=selectedLine.toUpperCase();
- $("hudLocation").textContent=currentStation+" · "+selectedTrain;
- $("driverPanel").classList.remove("active");
- createWorld();
- started=true;
- seated=false;inTrain=false;
- trainSpeed=0;power=0;brake=0;trainDistance=0;
- if(gameMode==="driver"){
-  player.position.set(-20,0,14);
-  setStatus("Driver duty: walk to the train and enter the driver's cab.");
+function createCar(index){
+ const g=new THREE.Group();
+ const color=choose(["#e6e8e9","#c33f4a","#d7b34c","#3c7190","#52616d","#e1e2d8"]);
+ const bodyMat=material("carBody"+index,color,.38,.2);
+ const windowMat=new THREE.MeshStandardMaterial({color:"#263e50",roughness:.15,metalness:.2});
+ box(g,2.1,.75,4,bodyMat,0,.85,0);
+ box(g,1.7,.7,2.15,windowMat,0,1.48,-.15);
+ box(g,1.75,.12,1.1,bodyMat,0,1.87,-.15);
+ // hood and boot
+ box(g,1.9,.22,.9,bodyMat,0,1.15,1.45);
+ box(g,1.9,.22,.7,bodyMat,0,1.15,-1.65);
+ // wheels
+ for(const x of [-1,1]){
+  for(const z of [-1.25,1.25]){
+   const wheel=cylinder(g,.39,.39,.2,material("carTyre","#171b20"),x,.43,z,16);
+   wheel.rotation.z=Math.PI/2;
+   cylinder(g,.2,.2,.22,material("hub","#929ca2"),x,.43,z,12).rotation.z=Math.PI/2;
+  }
+ }
+ // lights
+ for(const x of [-.7,.7]){
+  box(g,.35,.18,.08,material("carLamp","#fff1b8"),x,1.05,2.02);
+  box(g,.35,.18,.08,material("carTail","#e83c3c"),x,1.05,-2.02);
+ }
+ g.position.set(rand(-90,90),0,rand(-55,-38));
+ g.userData={speed:rand(5,13),lane:Math.random()<.5?-1:1,stopped:false};
+ trafficGroup.add(g);trafficList.push(g);
+}
+function createTraffic(){
+ trafficList=[];
+ const count=quality==="low"?5:quality==="medium"?8:12;
+ for(let i=0;i<count;i++)createCar(i);
+ // roadway
+ box(buildingGroup,210,.35,25,textures.road,0,-.2,-48);
+ for(let x=-100;x<100;x+=8){
+  box(buildingGroup,3,.04,.18,material("roadMark","#e8e4cf"),x,.0,-48);
+ }
+}
+function updateTraffic(dt){
+ trafficLightTimer+=dt;
+ if(trafficLightTimer>12){
+  trafficLightTimer=0;trafficGreen=!trafficGreen;
+ }
+ for(const car of trafficList){
+  const u=car.userData;
+  if(trafficGreen){
+   u.stopped=false;
+   car.position.x+=u.speed*dt*u.lane;
+  }else{
+   const stopX=u.lane>0?16:-16;
+   if(Math.abs(car.position.x-stopX)<9)u.stopped=true;
+   else car.position.x+=u.speed*dt*u.lane;
+  }
+  if(car.position.x>110)car.position.x=-110;
+  if(car.position.x< -110)car.position.x=110;
+ }
+}
+
+/* =========================================================
+   CITY BUILDINGS AND TRACKSIDE DETAILS
+========================================================= */
+
+function createCity(){
+ const colors=["#637989","#89969e","#b3b6b4","#536879","#8c9ba4","#4e6375"];
+ for(let i=0;i<50;i++){
+  const side=Math.random()<.5?-1:1;
+  const x=rand(-170,170),z=side*rand(65,120);
+  const w=rand(8,19),d=rand(8,18),h=rand(22,95);
+  const b=box(buildingGroup,w,h,d,material("building"+i,choose(colors)),x,h/2-1,z);
+  // facade windows
+  for(let y=4;y<h-3;y+=5){
+   for(let xx=-w/2+1;xx<w/2-1;xx+=2.6){
+    const windowMat=material("buildingWindow"+i,choose(["#9dc8d5","#536f81","#d4c99c"]));
+    box(buildingGroup,.85,1.5,.06,windowMat,x+xx,y,z+d/2+.05,{shadow:false});
+   }
+  }
+ }
+ // roadside trees
+ for(let i=0;i<22;i++){
+  const x=rand(-100,100),z=rand(38,60);
+  cylinder(buildingGroup,.3,.4,3,material("treeTrunk","#594637"),x,1.5,z,8);
+  sphere(buildingGroup,1.7,material("treeLeaves","#376b4c"),x,4,z);
+ }
+}
+
+/* =========================================================
+   SIGNALS AND TRAFFIC LIGHTS
+========================================================= */
+
+let signalLamps=[];
+function createSignals(){
+ signalLamps=[];
+ for(const z of [-90,-50,50,90]){
+  const g=new THREE.Group();signalGroup.add(g);
+  box(g,.18,5,.18,material("signalPole","#454e56"),-4,2.5,z);
+  box(g,.8,1.8,.55,material("signalCase","#17232d"),-4,4.8,z);
+  const red=sphere(g,.2,material("signalRed","#e33c42"),-4,5.2,z+.29);
+  const green=sphere(g,.2,material("signalGreen","#2bce79"),-4,4.55,z+.29);
+  signalLamps.push({red,green});
+ }
+}
+function updateSignals(){
+ for(const s of signalLamps){
+  s.red.material.emissive=new THREE.Color(trafficGreen?"#180000":"#ff0000");
+  s.green.material.emissive=new THREE.Color(trafficGreen?"#00ff55":"#001800");
+  s.red.material.emissiveIntensity=trafficGreen?.1:1;
+  s.green.material.emissiveIntensity=trafficGreen?1:.1;
+ }
+}
+
+/* =========================================================
+   PLAYER AND CAMERA
+========================================================= */
+
+function updatePlayer(dt){
+ if(!player.visible||insideTrain||seated)return;
+ const forward=new THREE.Vector3(-Math.sin(yaw),0,-Math.cos(yaw));
+ const right=new THREE.Vector3(Math.cos(yaw),0,-Math.sin(yaw));
+ const move=new THREE.Vector3();
+ if(keys.w||keys.arrowup)move.add(forward);
+ if(keys.s||keys.arrowdown)move.sub(forward);
+ if(keys.a||keys.arrowleft)move.sub(right);
+ if(keys.d||keys.arrowright)move.add(right);
+ if(move.lengthSq()>0){
+  move.normalize().multiplyScalar(playerSpeed*dt);
+  player.position.add(move);
+ }
+ player.position.x=clamp(player.position.x,-92,92);
+ player.position.z=clamp(player.position.z,-28,28);
+ if(jumping){
+  player.position.y+=jumpV*dt;jumpV-=14*dt;
+  if(player.position.y<=0){player.position.y=0;jumping=false}
+ }
+ camera.position.set(player.position.x,player.position.y+1.65,player.position.z);
+ camera.rotation.order="YXZ";
+ camera.rotation.y=yaw;camera.rotation.x=pitch;
+}
+function setCamera(){
+ if(seated){
+  camera.position.set(0,3.1,-17.5);
+  camera.lookAt(0,2,-30);
+ }else if(insideTrain){
+  if(cameraMode===0){
+   camera.position.set(0,2.5,-8);
+   camera.lookAt(0,2,-20);
+  }else if(cameraMode===1){
+   camera.position.set(0,9,0);camera.lookAt(0,0,0);
+  }else{
+   camera.position.set(0,5,38);camera.lookAt(0,1,0);
+  }
+ }else if(cameraMode===1){
+  const behind=new THREE.Vector3(Math.sin(yaw)*6,3,Math.cos(yaw)*6);
+  camera.position.copy(player.position).add(behind);
+  camera.lookAt(player.position.x,1.5,player.position.z);
  }else{
-  player.position.set(0,0,14);
-  setStatus("Passenger mode: explore the platform and board the train.");
- }
- showToast("Welcome to "+currentStation+" station");
- animate();
-}
-
-function interact(){
- if(!started)return;
- if(gameMode==="driver"&&!inTrain){
-  const d=player.position.distanceTo(new THREE.Vector3(0,0,-30));
-  if(d<48){
-   player.position.set(-11,0,-25);
-   inTrain=true;
-   showToast("Train reached. Walk to the driver's cab.");
-   setStatus("Find the cab entrance and press E.");
-   return;
-  }
-  if(player.position.distanceTo(new THREE.Vector3(-11,0,-25))<5){
-   seated=true;inTrain=true;
-   player.visible=false;
-   camera.position.set(-10,3.4,-27);
-   camera.lookAt(0,2,-30);
-   $("driverPanel").classList.add("active");
-   showToast("You are seated in the driver's cab.");
-   setStatus("Driver console active. Use power and brake controls.");
-   return;
-  }
- }
- if(gameMode==="driver"&&inTrain&&!seated){
-  seated=true;player.visible=false;
-  $("driverPanel").classList.add("active");
-  showToast("Driver seated. Controls activated.");
-  setStatus("Cab active. Check doors before departure.");
-  return;
- }
- if(gameMode==="passenger"){
-  const trainDist=player.position.distanceTo(new THREE.Vector3(0,0,-30));
-  if(!inTrain&&trainDist<38){
-   if(!doorsOpen){showToast("The train doors are closed.");return}
-   inTrain=true;player.visible=false;
-   camera.position.set(0,2.5,-30);
-   camera.lookAt(5,2,-30);
-   showToast("You boarded the train.");
-   setStatus("Passenger onboard. Press E again to leave when stopped.");
-   return;
-  }
-  if(inTrain&&trainSpeed<1){
-   inTrain=false;player.visible=true;
-   player.position.set(0,0,12);
-   showToast("You left the train.");
-   setStatus("You are on the platform.");
-   return;
-  }
-  if(!inTrain)showToast("Walk closer to the train doors to board.");
+  camera.position.set(player.position.x,player.position.y+1.65,player.position.z);
+  camera.rotation.order="YXZ";camera.rotation.y=yaw;camera.rotation.x=pitch;
  }
 }
-function toggleDoors(){
- if(trainSpeed>1){showToast("Cannot operate doors while moving.");return}
- doorsOpen=!doorsOpen;
- showToast(doorsOpen?"Train doors opened.":"Train doors closed.");
- setStatus(doorsOpen?"Doors open. Please stand clear.":"Doors closed.");
-}
-function applyBrake(){
- brake=5;power=0;
-}
-function setPower(delta){power=clamp(power+delta,0,5);if(power>0)brake=0}
 function changeCamera(){
  cameraMode=(cameraMode+1)%3;
- if(seated){
-  if(cameraMode===0){camera.position.set(-10,3.4,-27);camera.lookAt(0,2,-30)}
-  if(cameraMode===1){camera.position.set(0,6,-48);camera.lookAt(0,1,-30)}
-  if(cameraMode===2){camera.position.set(0,3,-20);camera.lookAt(0,2,-30)}
- }else if(inTrain){
-  if(cameraMode===0){camera.position.set(0,2.5,-30);camera.lookAt(5,2,-30)}
-  if(cameraMode===1){camera.position.set(0,8,-42);camera.lookAt(0,0,-30)}
-  if(cameraMode===2){camera.position.set(0,2,-45);camera.lookAt(0,2,-30)}
- }
- showToast(["First-person","Elevated camera","Exterior camera"][cameraMode]);
+ if(!insideTrain&&!seated)showToast(cameraMode===0?"First-person view":"Third-person view");
+ else showToast("Camera changed");
+ setCamera();
 }
 
-/* -------------------------------------------------------
+/* =========================================================
+   TRAIN LOGIC
+========================================================= */
+
+function updateTrain(dt){
+ if(!seated)return;
+ // Door interlock
+ if(doorsOpen&&power>0){
+  power=0;
+  $("cabStatus").textContent="DOORS OPEN";
+ }
+ if(!doorsOpen){
+  if(power>0)trainSpeed+=power*2.8*dt;
+ }else{
+  trainSpeed=Math.max(0,trainSpeed-5*dt);
+ }
+ if(brake>0)trainSpeed-=brake*7*dt;
+ else if(power===0)trainSpeed-=.7*dt;
+ trainSpeed=clamp(trainSpeed,0,100);
+ trainProgress+=trainSpeed/3.6*dt;
+ // Train moves forward along track
+ trainGroup.position.z=-Math.min(trainProgress,stationTravel);
+ // stop at the next station
+ if(trainProgress>=stationTravel){
+  trainProgress=0;trainSpeed=0;power=0;brake=0;
+  trainGroup.position.z=0;
+  stationIndex=(stationIndex+1)%stations.length;
+  stationName=stations[stationIndex];
+  nextStopIndex=(stationIndex+1)%stations.length;
+  doorsOpen=true;
+  doorTarget=1;
+  $("location").textContent=stationName+" · "+trainName;
+  $("cabStatus").textContent="STATION STOP";
+  showToast("Arrived at "+stationName);
+  setStatus("Station stop. Doors opened. Please mind the platform gap.");
+ }
+ // update display
+ $("speed").textContent=Math.round(trainSpeed);
+ $("power").textContent=power;
+ $("brake").textContent=brake;
+ $("next").textContent=stations[(stationIndex+1)%stations.length].slice(0,9);
+ // doors animate
+ doorTarget=doorsOpen?1:0;
+ doorAnimation+=(doorTarget-doorAnimation)*Math.min(1,dt*3);
+ trainDoors.forEach(d=>{
+  d.group.position.x=d.side*(2.14+doorAnimation*.65);
+ });
+}
+function setPower(n){
+ if(!seated)return;
+ power=clamp(power+n,0,5);
+ if(power>0)brake=0;
+}
+function applyBrake(){
+ if(seated){brake=5;power=0}
+ else showToast("You are not in the driver's seat.");
+}
+function toggleDoors(){
+ if(!seated)return;
+ if(trainSpeed>1){showToast("Stop the train before opening doors.");return}
+ doorsOpen=!doorsOpen;
+ showToast(doorsOpen?"Doors opened":"Doors closed");
+ setStatus(doorsOpen?"Doors open. Please stand clear.":"Doors closed.");
+}
+function enterCab(){
+ if(mode!=="driver"||seated)return;
+ const cabPos=new THREE.Vector3(0,0,-17);
+ if(player.position.distanceTo(cabPos)>5){
+  showToast("Walk closer to the driver's cab first.");
+  return;
+ }
+ seated=true;insideTrain=true;player.visible=false;
+ $("cab").classList.add("active");
+ setCamera();
+ showToast("Driver seated. Console activated.");
+ setStatus("Check doors, close them and apply power to depart.");
+}
+function interact(){
+ if(!started)return;
+ if(mode==="driver"&&!seated){
+  enterCab();return;
+ }
+ if(mode==="passenger"){
+  const d=player.position.distanceTo(new THREE.Vector3(0,0,0));
+  if(!insideTrain&&d<30){
+   if(!doorsOpen){showToast("The train doors are closed.");return}
+   insideTrain=true;player.visible=false;setCamera();
+   showToast("You boarded the train.");
+   setStatus("Passenger onboard. Press E to leave when stopped.");
+  }else if(insideTrain){
+   if(trainSpeed>1){showToast("Wait until the train stops.");return}
+   insideTrain=false;player.visible=true;
+   player.position.set(4,0,10);
+   setCamera();showToast("You left the train.");
+  }else showToast("Move closer to the train.");
+ }
+}
+
+/* =========================================================
+   TIME AND HUD
+========================================================= */
+
+function updateTime(dt){
+ elapsed+=dt;
+ hour=(hour+dt/1800)%24;
+ const h=Math.floor(hour),m=Math.floor((hour%1)*60);
+ $("time").textContent=String(h).padStart(2,"0")+":"+String(m).padStart(2,"0");
+}
+function updatePrompt(){
+ if(mode==="driver"&&!seated){
+  $("prompt").textContent=player.position.distanceTo(new THREE.Vector3(0,0,-17))<5?
+   "PRESS E TO SIT IN DRIVER CAB":"WASD · WALK TO DRIVER CAB";
+ }else if(mode==="passenger"&&!insideTrain){
+  $("prompt").textContent="WASD MOVE · E BOARD TRAIN";
+ }else{
+  $("prompt").textContent="E INTERACT · C CAMERA";
+ }
+}
+
+/* =========================================================
+   GAME INITIALISATION
+========================================================= */
+
+function initMenu(){
+ const line=$("line");
+ Object.keys(LINES).forEach(name=>{
+  const o=document.createElement("option");o.value=name;o.textContent=name;line.append(o);
+ });
+ function updateOptions(){
+  lineName=line.value;
+  const data=LINES[lineName];
+  $("train").innerHTML="";
+  data.trains.forEach(t=>{
+   const o=document.createElement("option");o.value=t;o.textContent=t;$("train").append(o);
+  });
+  $("station").innerHTML="";
+  data.stations.forEach(s=>{
+   const o=document.createElement("option");o.value=s;o.textContent=s;$("station").append(o);
+  });
+ }
+ line.addEventListener("change",updateOptions);
+ updateOptions();
+ $("start").onclick=startGame;
+ $("help").onclick=()=>showToast("WASD walk · Drag to look · E interact · C camera · Space jump · F brake · G doors");
+}
+function startGame(){
+ lineName=$("line").value;
+ trainName=$("train").value;
+ mode=$("mode").value;
+ stationName=$("station").value;
+ stations=LINES[lineName].stations;
+ stationIndex=Math.max(0,stations.indexOf(stationName));
+ nextStopIndex=(stationIndex+1)%stations.length;
+ hour=Number($("time").value);
+ quality=$("quality").value;
+ $("menu").classList.add("hidden");
+ $("hud").classList.remove("hidden");
+ $("lineName").textContent=lineName.toUpperCase();
+ $("location").textContent=stationName+" · "+trainName;
+ createWorld();
+ started=true;paused=false;
+ trainSpeed=0;power=0;brake=0;trainProgress=0;
+ doorsOpen=true;doorAnimation=1;seated=false;insideTrain=false;
+ player.visible=true;
+ if(mode==="driver"){
+  player.position.set(-12,0,13);
+  setStatus("Driver duty: walk to the train and enter the cab.");
+ }else{
+  player.position.set(0,0,13);
+  setStatus("Passenger mode: explore the platform and board the train.");
+ }
+ setCamera();
+ clock.start();
+ animate();
+ showToast("Welcome to "+stationName+" station");
+}
+
+/* =========================================================
    INPUT
-------------------------------------------------------- */
+========================================================= */
 
 addEventListener("keydown",e=>{
- keys[e.key.toLowerCase()]=true;
- if(e.key===" "){e.preventDefault();if(!isJumping&&!seated&&!inTrain){isJumping=true;jumpVelocity=5}}
- if(e.key.toLowerCase()==="e")interact();
- if(e.key.toLowerCase()==="c")changeCamera();
- if(e.key.toLowerCase()==="f")applyBrake();
- if(e.key.toLowerCase()==="g")toggleDoors();
- if(e.key==="Escape")pauseMenu();
+ const k=e.key.toLowerCase();keys[k]=true;
+ if(e.code==="Space"){
+  e.preventDefault();
+  if(!jumping&&!insideTrain&&!seated){jumping=true;jumpV=5}
+ }
+ if(k==="e")interact();
+ if(k==="c")changeCamera();
+ if(k==="f")applyBrake();
+ if(k==="g")toggleDoors();
+ if(k==="escape")pauseMenu();
 });
 addEventListener("keyup",e=>keys[e.key.toLowerCase()]=false);
 
-rendererPointerSetup();
-function rendererPointerSetup(){
- addEventListener("pointerdown",e=>{
-  if(!started||seated||inTrain)return;
-  pointerDown=true;lastPointer.x=e.clientX;lastPointer.y=e.clientY;
- });
- addEventListener("pointerup",()=>pointerDown=false);
- addEventListener("pointermove",e=>{
-  if(!pointerDown||!started||seated||inTrain)return;
-  const dx=e.clientX-lastPointer.x,dy=e.clientY-lastPointer.y;
-  yaw-=dx*.004;pitch=clamp(pitch-dy*.003,-1.1,1.1);
-  lastPointer.x=e.clientX;lastPointer.y=e.clientY;
- });
-}
-
-document.querySelectorAll("[data-key]").forEach(btn=>{
- const key=btn.dataset.key;
- btn.addEventListener("pointerdown",e=>{e.preventDefault();keys[key]=true});
- ["pointerup","pointerleave","pointercancel"].forEach(ev=>btn.addEventListener(ev,()=>keys[key]=false));
+addEventListener("pointerdown",e=>{
+ if(!started||seated||insideTrain)return;
+ pointerDown=true;lastPointer={x:e.clientX,y:e.clientY};
 });
-$("mobileInteract").onclick=interact;
-$("mobileJump").onclick=()=>{if(!isJumping&&!seated&&!inTrain){isJumping=true;jumpVelocity=5}};
-$("mobileBrake").onclick=applyBrake;
-$("mobileCam").onclick=changeCamera;
-$("cameraBtn").onclick=changeCamera;
-$("exitBtn").onclick=pauseMenu;
-$("mapBtn").onclick=()=>{
- $("mapPanel").classList.toggle("hidden");
- $("mapRoute").textContent=activeLineData.stations.join("  →  ");
-};
-$("closeMap").onclick=()=>$("mapPanel").classList.add("hidden");
-$("powerUp").onclick=()=>setPower(1);
-$("powerDown").onclick=()=>setPower(-1);
+addEventListener("pointerup",()=>pointerDown=false);
+addEventListener("pointercancel",()=>pointerDown=false);
+addEventListener("pointermove",e=>{
+ if(!pointerDown||!started||seated||insideTrain)return;
+ const dx=e.clientX-lastPointer.x,dy=e.clientY-lastPointer.y;
+ yaw-=dx*.004;pitch=clamp(pitch-dy*.003,-1.15,1.15);
+ lastPointer={x:e.clientX,y:e.clientY};
+});
+
+document.querySelectorAll("[data-key]").forEach(b=>{
+ const k=b.dataset.key;
+ b.addEventListener("pointerdown",e=>{e.preventDefault();keys[k]=true});
+ ["pointerup","pointerleave","pointercancel"].forEach(ev=>b.addEventListener(ev,()=>keys[k]=false));
+});
+$("use").onclick=interact;
+$("jump").onclick=()=>{if(!jumping&&!insideTrain&&!seated){jumping=true;jumpV=5}};
+$("mBrake").onclick=applyBrake;
+$("mCamera").onclick=changeCamera;
+$("camera").onclick=changeCamera;
+$("pUp").onclick=()=>setPower(1);
+$("pDown").onclick=()=>setPower(-1);
 $("brakeBtn").onclick=applyBrake;
-$("doorBtn").onclick=toggleDoors;
+$("doors").onclick=toggleDoors;
+$("route").onclick=()=>{
+ $("map").classList.toggle("hidden");
+ $("routeText").textContent=stations.join(" → ");
+};
+$("closeMap").onclick=()=>$("map").classList.add("hidden");
+$("menuBtn").onclick=pauseMenu;
 
-/* -------------------------------------------------------
-   MOVEMENT AND SIMULATION
-------------------------------------------------------- */
+/* =========================================================
+   GAME LOOP
+========================================================= */
 
-function updatePlayer(dt){
- if(!player||!player.visible||seated||inTrain)return;
- const forward=new THREE.Vector3(-Math.sin(yaw),0,-Math.cos(yaw));
- const right=new THREE.Vector3(Math.cos(yaw),0,-Math.sin(yaw));
- let move=new THREE.Vector3();
- if(keys.w||keys.arrowup)move.add(forward);
- if(keys.s||keys.arrowdown)move.sub(forward);
- if(keys.d||keys.arrowright)move.add(right);
- if(keys.a||keys.arrowleft)move.sub(right);
- if(move.lengthSq()>0){
-  move.normalize().multiplyScalar(7*dt);
-  player.position.add(move);
- }
- player.position.x=clamp(player.position.x,-72,72);
- player.position.z=clamp(player.position.z,-25,27);
- if(isJumping){
-  player.position.y+=jumpVelocity*dt;
-  jumpVelocity-=13*dt;
-  if(player.position.y<=0){player.position.y=0;isJumping=false}
- }
- camera.position.set(player.position.x,player.position.y+playerHeight,player.position.z);
- camera.rotation.order="YXZ";
- camera.rotation.y=yaw;
- camera.rotation.x=pitch;
-}
-function updateTrain(dt){
- if(!seated)return;
- if(power>0&&!doorsOpen){
-  trainSpeed+=power*2.4*dt;
- }else if(power>0&&doorsOpen){
-  power=0;showToast("Close the doors before departure.");
- }
- if(brake>0)trainSpeed-=brake*5*dt;
- else if(power===0)trainSpeed-=1.2*dt;
- trainSpeed=clamp(trainSpeed,0,trainMaxSpeed);
- trainDistance+=trainSpeed/3.6*dt;
- trainGroup.position.z=-30+trainDistance;
- // Arrive at next station
- if(trainDistance>stationLength){
-  trainDistance=0;trainSpeed=0;power=0;brake=0;
-  const stations=activeLineData.stations;
-  currentStation=stations[nextStationIndex%stations.length];
-  nextStationIndex=(nextStationIndex+1)%stations.length;
-  trainGroup.position.z=-30;
-  doorsOpen=true;
-  $("hudLocation").textContent=currentStation+" · "+selectedTrain;
-  $("nextRead").textContent=stations[nextStationIndex].slice(0,8);
-  showToast("Arrived at "+currentStation);
-  setStatus("Station stop. Doors opened. Please mind the platform gap.");
- }
-}
-function updateNPCs(dt){
- npcData.forEach(n=>{
-  const u=n.userData;
-  u.wait-=dt;
-  if(u.wait<=0){
-   n.position.x+=u.direction*u.speed*dt;
-   if(Math.abs(n.position.x-u.origin)>rand(8,25)){
-    u.direction*=-1;u.wait=rand(1,4);u.origin=n.position.x;
-   }
-  }
- });
-}
-function updateCars(dt){
- carGroup.children.forEach(c=>{
-  c.position.x+=c.userData.speed*dt;
-  if(c.position.x>90)c.position.x=-90;
- });
-}
-function updateTime(dt){
- elapsedTime+=dt;
- timeHours=(timeHours+dt/1800)%24;
- const h=Math.floor(timeHours),m=Math.floor((timeHours-h)*60);
- $("clock").textContent=String(h).padStart(2,"0")+":"+String(m).padStart(2,"0");
-}
-function updateHUD(){
- $("speedRead").textContent=Math.round(trainSpeed);
- $("powerRead").textContent=power;
- $("brakeRead").textContent=brake;
- const s=activeLineData.stations;
- $("nextRead").textContent=s[nextStationIndex%s.length].slice(0,8);
-}
-function updateInteraction(){
- if(!started)return;
- if(gameMode==="driver"&&!inTrain){
-  const d=player.position.distanceTo(new THREE.Vector3(-11,0,-25));
-  $("interaction").textContent=d<5?"PRESS E TO ENTER DRIVER CAB":"WASD MOVE · WALK TO THE TRAIN";
- }else if(gameMode==="passenger"&&!inTrain){
-  $("interaction").textContent="WASD MOVE · E BOARD TRAIN";
- }else{
-  $("interaction").textContent="E INTERACT · C CAMERA · G DOORS";
- }
-}
 function animate(){
  if(!started)return;
  animationId=requestAnimationFrame(animate);
  const dt=Math.min(clock.getDelta(),.05);
  updatePlayer(dt);
  updateTrain(dt);
- updateNPCs(dt);
- updateCars(dt);
+ updatePassengers(dt);
+ updateTraffic(dt);
+ updateSignals();
  updateTime(dt);
- updateHUD();
- updateInteraction();
+ updatePrompt();
+ setCamera();
  renderer.render(scene,camera);
 }
-
-/* -------------------------------------------------------
-   PAUSE / RESUME / RESIZE
-------------------------------------------------------- */
-
+function showToast(msg){
+ const el=$("toast");el.textContent=msg;el.classList.add("show");
+ clearTimeout(showToast.timer);
+ showToast.timer=setTimeout(()=>el.classList.remove("show"),2200);
+}
+function setStatus(msg){$("status").textContent=msg}
 function pauseMenu(){
  if(!started)return;
- started=false;
- cancelAnimationFrame(animationId);
- $("hud").classList.add("hidden");
- $("mapPanel").classList.add("hidden");
+ started=false;cancelAnimationFrame(animationId);
+ $("hud").classList.add("hidden");$("map").classList.add("hidden");
+ $("cab").classList.remove("active");
  $("menu").classList.remove("hidden");
- $("driverPanel").classList.remove("active");
 }
 addEventListener("resize",()=>{
  if(!renderer||!camera)return;
@@ -1004,6 +1181,7 @@ addEventListener("resize",()=>{
  camera.updateProjectionMatrix();
  renderer.setSize(innerWidth,innerHeight);
 });
+
 initMenu();
 </script>
 </body>
