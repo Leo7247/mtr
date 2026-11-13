@@ -4,80 +4,81 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="theme-color" content="#07121d">
-<title>HK MTR Simulator 2.1</title>
-
+<meta name="theme-color" content="#071521">
+<title>HK MTR Simulator</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;overflow:hidden;background:#07121d;color:white;font-family:Arial,system-ui,sans-serif;touch-action:none}
-button,select,input{font:inherit}
+body{margin:0;background:#071521;color:white;font-family:Arial,sans-serif;overflow:hidden;touch-action:none}
 #game{position:fixed;inset:0}
-#game canvas{display:block}
+#game canvas{display:block;width:100%;height:100%}
+.glass{background:#071a2be8;border:1px solid #ffffff2b;backdrop-filter:blur(12px);border-radius:12px}
 #hud{position:fixed;inset:0;pointer-events:none}
-.glass{background:#071522df;border:1px solid #ffffff25;backdrop-filter:blur(15px);border-radius:13px;box-shadow:0 8px 30px #0005}
 .top{position:absolute;top:10px;left:10px;right:10px;display:flex;justify-content:space-between;gap:8px}
-.brand{padding:10px 13px}
+.brand,.metrics{padding:10px}
 .brand b{font-size:13px;letter-spacing:1px}
-.brand small{display:block;color:#9ab0c2;font-size:9px;margin-top:4px}
-.metrics{display:flex;gap:15px;padding:9px 13px}
+.brand small{display:block;color:#9bb5c7;font-size:9px;margin-top:4px}
+.metrics{display:flex;gap:12px}
 .metric small{display:block;color:#91a8b9;font-size:9px}
-.metric strong{font-size:17px;font-variant-numeric:tabular-nums}
-#speed{color:#44e3ff}
-.left{position:absolute;top:82px;left:10px;width:175px;display:grid;gap:8px}
-.right{position:absolute;top:82px;right:10px;width:155px;display:grid;gap:8px}
-.panel{padding:11px}
-.heading{font-size:9px;letter-spacing:1.5px;color:#40d9ee;font-weight:bold;margin-bottom:9px}
-.big{font-size:17px;font-weight:bold}
-.small{font-size:10px;color:#91a9ba}
-.line{display:flex;justify-content:space-between;gap:5px;font-size:11px;margin-top:8px}
-.bar{height:6px;border-radius:8px;background:#294052;margin-top:6px;overflow:hidden}
-.bar span{height:100%;width:0;display:block;background:#43ddec;transition:width .15s}
-#message{position:absolute;top:75px;left:50%;transform:translateX(-50%);padding:10px 16px;opacity:0;transition:.3s;font-size:12px;text-align:center;max-width:90%;white-space:normal}
+.metric strong{font-size:17px}
+#speed{color:#48e4ff}
+.side{position:absolute;top:83px;left:10px;width:165px;display:grid;gap:8px}
+.right{left:auto;right:10px;width:145px}
+.panel{padding:10px}
+.heading{font-size:9px;letter-spacing:1px;color:#40d9ed;font-weight:bold;margin-bottom:8px}
+.big{font-size:16px;font-weight:bold}
+.small{font-size:10px;color:#9bb2c3}
+.line{display:flex;justify-content:space-between;font-size:11px;margin-top:8px;gap:4px}
+.bar{height:5px;background:#314354;border-radius:9px;margin-top:6px;overflow:hidden}
+.bar span{display:block;height:100%;width:0;background:#42d9ed}
+#message{position:absolute;top:75px;left:50%;transform:translateX(-50%);padding:10px 15px;opacity:0;transition:.2s;font-size:12px;text-align:center;max-width:90%}
 #message.show{opacity:1}
-.controls{position:absolute;bottom:max(10px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);display:flex;gap:7px;pointer-events:auto;width:min(760px,96%);justify-content:center}
-.ctrl{background:#0b1c2bdf;border:1px solid #ffffff33;color:white;border-radius:12px;min-width:68px;padding:12px 7px;touch-action:none;user-select:none;-webkit-user-select:none}
-.ctrl:active,.ctrl.active{background:#126079;border-color:#45e1f5}
-.ctrl small{display:block;font-size:9px;color:#a5bdcc}
+.controls{position:absolute;bottom:max(10px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);display:flex;gap:6px;width:min(760px,97%);pointer-events:auto}
+.ctrl{flex:1;min-width:0;padding:12px 3px;background:#10283b;color:white;border:1px solid #ffffff35;border-radius:11px;touch-action:none}
+.ctrl:active{background:#12617b}
+.ctrl small{display:block;color:#a5bbc9;font-size:9px}
 .ctrl b{font-size:13px}
-.ctrl.red{border-color:#ff586b66}
-.ctrl.green{border-color:#49e4a166}
-#camera,#mapButton,#settingsButton{position:absolute;right:10px;bottom:100px;pointer-events:auto;background:#0b1c2bdf;border:1px solid #ffffff33;border-radius:10px;padding:10px 13px;color:white;font-size:11px}
-#mapButton{bottom:150px}
-#settingsButton{bottom:200px}
-#start,#map,#settings{position:fixed;inset:0;z-index:10;background:linear-gradient(145deg,#06111c,#142e43);display:grid;place-items:center;padding:20px}
-.card{width:min(480px,100%);padding:26px;border-radius:22px;background:#102337;border:1px solid #ffffff25;text-align:center;box-shadow:0 25px 90px #0009}
-.logo{font-size:47px}
-.card h1{font-size:25px;margin:8px 0}
-.card p{font-size:13px;line-height:1.7;color:#a5bac9}
-.primary{width:100%;padding:15px;background:linear-gradient(110deg,#00a9c8,#2877df);border:0;border-radius:11px;color:white;font-weight:bold;margin-top:15px}
-select{width:100%;padding:12px;background:#071522;color:white;border:1px solid #38546b;border-radius:10px;margin-top:8px}
-.mapContent{width:min(600px,100%);max-height:85vh;overflow:auto;padding:22px}
-.mapContent button,.secondary{background:#17364c;border:1px solid #ffffff30;color:white;padding:10px;border-radius:9px}
-.stationRow{padding:10px;border-bottom:1px solid #ffffff17;text-align:left;font-size:12px}
-#map,#settings{display:none}
-#loading{position:fixed;inset:0;display:none;place-items:center;background:#071522ed;z-index:20;text-align:center;padding:25px}
-#loading.show{display:grid}
-@media(max-width:650px){
- .brand{padding:8px}.brand b{font-size:10px}
- .metrics{gap:8px;padding:8px}.metric strong{font-size:14px}
- .left{top:76px;width:130px}.right{top:76px;width:115px}
- .panel{padding:8px}.big{font-size:13px}
- .ctrl{flex:1;min-width:0;padding:13px 3px}
- .ctrl small{font-size:8px}.ctrl b{font-size:11px}
- #camera,#mapButton,#settingsButton{right:8px;padding:8px 9px;font-size:10px}
- #camera{bottom:100px}#mapButton{bottom:144px}#settingsButton{bottom:188px}
+#camera,#mapButton,#settingsButton{position:absolute;right:10px;bottom:100px;pointer-events:auto;background:#10283b;color:white;border:1px solid #ffffff35;padding:10px;border-radius:9px;font-size:10px}
+#mapButton{bottom:145px}
+#settingsButton{bottom:190px}
+#start,#map,#settings,#loading{position:fixed;inset:0;z-index:5;background:linear-gradient(145deg,#06111c,#17354c);display:grid;place-items:center;padding:18px}
+#map,#settings,#loading{display:none}
+.card{width:min(460px,100%);padding:25px;background:#10283a;border:1px solid #ffffff28;border-radius:20px;text-align:center;box-shadow:0 20px 70px #0008}
+.card h1{font-size:25px;margin:10px 0}
+.card p{color:#a9bfce;font-size:13px;line-height:1.6}
+select{width:100%;padding:12px;margin-top:8px;background:#071521;color:white;border:1px solid #486174;border-radius:9px}
+.primary{width:100%;padding:15px;background:linear-gradient(100deg,#00a9c8,#286bdb);border:0;border-radius:10px;color:white;font-weight:bold;margin-top:17px}
+.secondary{padding:11px;background:#24445b;color:white;border:1px solid #ffffff35;border-radius:9px;margin-top:10px}
+.mapCard{max-height:85vh;overflow:auto}
+.stationRow{padding:10px;text-align:left;border-bottom:1px solid #ffffff1b;font-size:12px}
+#loading{z-index:20;background:#071521ed}
+#loading h2{font-size:19px}
+#loading p{font-size:12px;color:#a9bfce}
+#loadingError{color:#ff9c9c;overflow-wrap:anywhere;font-size:12px}
+@media(max-width:600px){
+ .brand b{font-size:10px}
+ .brand{padding:8px}
+ .metrics{gap:8px;padding:8px}
+ .metric strong{font-size:14px}
+ .side{width:125px;top:75px}
+ .right{width:112px}
+ .panel{padding:8px}
+ .big{font-size:13px}
+ .ctrl{padding:13px 2px}
+ .ctrl small{font-size:8px}
+ .ctrl b{font-size:11px}
+ #camera,#mapButton,#settingsButton{right:7px;padding:8px}
 }
 </style>
 </head>
-
 <body>
+
 <div id="game"></div>
 
 <div id="hud">
  <div class="top">
   <div class="brand glass">
    <b>🚇 HK MTR SIMULATOR</b>
-   <small>3D RAILWAY EXPERIENCE • V2.1</small>
+   <small>3D METRO EXPERIENCE</small>
   </div>
   <div class="metrics glass">
    <div class="metric"><small>SPEED</small><strong id="speed">0</strong></div>
@@ -86,23 +87,22 @@ select{width:100%;padding:12px;background:#071522;color:white;border:1px solid #
   </div>
  </div>
 
- <div class="left">
+ <div class="side">
   <div class="panel glass">
    <div class="heading">ROUTE INFORMATION</div>
    <div class="big" id="station">CENTRAL</div>
    <div class="small">CURRENT STATION</div>
-   <div class="line"><span>Next station</span><b id="next">ADMIRALTY</b></div>
-   <div class="line"><span>Distance</span><b id="distance">800 m</b></div>
+   <div class="line"><span>Next</span><b id="next">ADMIRALTY</b></div>
+   <div class="line"><span>Distance</span><b id="distance">800m</b></div>
    <div class="bar"><span id="progress"></span></div>
   </div>
   <div class="panel glass">
    <div class="heading">SIGNALLING</div>
    <div class="line"><span id="signal">GREEN</span><b id="signalSpeed">80</b></div>
-   <div class="small">SIMULATED SPEED RESTRICTION</div>
   </div>
  </div>
 
- <div class="right">
+ <div class="side right">
   <div class="panel glass">
    <div class="heading">TRAIN SYSTEMS</div>
    <div class="line"><span>Doors</span><b id="doors">CLOSED</b></div>
@@ -111,10 +111,9 @@ select{width:100%;padding:12px;background:#071522;color:white;border:1px solid #
    <div class="line"><span>Brake</span><b id="brake">0%</b></div>
   </div>
   <div class="panel glass">
-   <div class="heading">TRAIN CONDITION</div>
-   <div class="small">MOTOR TEMPERATURE</div>
+   <div class="heading">MOTOR</div>
+   <div class="small">TEMPERATURE</div>
    <div class="bar"><span id="motorbar"></span></div>
-   <div class="line"><span>Battery</span><b>100%</b></div>
   </div>
  </div>
 
@@ -126,9 +125,9 @@ select{width:100%;padding:12px;background:#071522;color:white;border:1px solid #
 
  <div class="controls">
   <button class="ctrl" id="minus"><small>POWER</small><b>−</b></button>
-  <button class="ctrl green" id="plus"><small>THROTTLE</small><b>＋</b></button>
-  <button class="ctrl red" id="brakeButton"><small>BRAKE</small><b>▰</b></button>
-  <button class="ctrl red" id="emergency"><small>EMERGENCY</small><b>STOP</b></button>
+  <button class="ctrl" id="plus"><small>THROTTLE</small><b>＋</b></button>
+  <button class="ctrl" id="brakeButton"><small>BRAKE</small><b>▰</b></button>
+  <button class="ctrl" id="emergency"><small>EMERGENCY</small><b>STOP</b></button>
   <button class="ctrl" id="doorButton"><small>DOORS</small><b>OPEN</b></button>
   <button class="ctrl" id="horn"><small>HORN</small><b>📢</b></button>
  </div>
@@ -136,106 +135,74 @@ select{width:100%;padding:12px;background:#071522;color:white;border:1px solid #
 
 <div id="start">
  <div class="card">
-  <div class="logo">🚇</div>
+  <div style="font-size:48px">🚇</div>
   <h1>HONG KONG MTR</h1>
-  <h2>3D SIMULATOR</h2>
-  <p>Drive a 3D metro train, control acceleration and braking, stop at stations and explore the railway from different cameras.</p>
-  <div style="text-align:left;font-size:12px;margin-top:18px">SELECT RAILWAY</div>
+  <h2>3D TRAIN SIMULATOR</h2>
+  <p>Drive a metro train through underground railway tunnels and stations.</p>
+  <div style="text-align:left;font-size:12px;margin-top:16px">SELECT LINE</div>
   <select id="route">
    <option value="island">Island Line</option>
    <option value="tsuen">Tsuen Wan Line</option>
    <option value="tko">Tseung Kwan O Line</option>
   </select>
-  <div style="text-align:left;font-size:12px;margin-top:15px">GRAPHICS QUALITY</div>
+  <div style="text-align:left;font-size:12px;margin-top:14px">GRAPHICS</div>
   <select id="quality">
    <option value="high">High</option>
    <option value="medium">Medium</option>
-   <option value="low">Low (mobile performance)</option>
+   <option value="low">Low - mobile performance</option>
   </select>
-  <button class="primary" id="startButton">START SIMULATOR →</button>
-  <p style="font-size:10px">Requires internet access to load Three.js.</p>
+  <button class="primary" id="startButton" type="button">START SIMULATOR →</button>
+  <p style="font-size:10px">Internet connection required for 3D engine.</p>
+ </div>
+</div>
+
+<div id="loading">
+ <div class="card">
+  <div style="font-size:40px">🚇</div>
+  <h2 id="loadingText">Starting simulator...</h2>
+  <p id="loadingStatus">Preparing the 3D engine.</p>
+  <p id="loadingError"></p>
+  <button class="secondary" id="loadingClose" style="display:none">CLOSE</button>
  </div>
 </div>
 
 <div id="map">
- <div class="card mapContent">
+ <div class="card mapCard">
   <h2>🗺 RAILWAY MAP</h2>
   <div id="stationList"></div>
-  <button id="closeMap" style="margin-top:15px">CLOSE</button>
+  <button class="secondary" id="closeMap">CLOSE</button>
  </div>
 </div>
 
 <div id="settings">
  <div class="card">
-  <h2>⚙ SIMULATOR SETTINGS</h2>
-  <p>Adjust your driving experience.</p>
-  <div style="text-align:left;font-size:12px">CAMERA FIELD OF VIEW</div>
+  <h2>⚙ SETTINGS</h2>
+  <p>Camera field of view</p>
   <input id="fov" type="range" min="45" max="100" value="72" style="width:100%">
-  <div style="text-align:left;font-size:12px;margin-top:15px">TRAIN SPEED LIMIT</div>
+  <p>Speed limit</p>
   <select id="speedLimit">
    <option value="80">80 km/h</option>
    <option value="100">100 km/h</option>
    <option value="120">120 km/h</option>
   </select>
-  <button class="primary" id="applySettings">APPLY SETTINGS</button>
-  <button class="secondary" id="closeSettings" style="margin-top:10px">CLOSE</button>
+  <button class="primary" id="applySettings">APPLY</button>
+  <button class="secondary" id="closeSettings">CLOSE</button>
  </div>
 </div>
 
-<div id="loading">
- <div>
-  <div style="font-size:40px">🚇</div>
-  <h2 id="loadingText">Loading simulator...</h2>
-  <p style="color:#9ab0c2">Preparing railway environment</p>
- </div>
-</div>
+<script>
+/* =====================================
+   IMPORTANT:
+   This is a normal browser script.
+   The Start button is registered BEFORE
+   Three.js is downloaded.
+===================================== */
 
-<script type="importmap">
-{
- "imports":{
-  "three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"
- }
-}
-</script>
+(function(){
 
-<script type="module">
-import * as THREE from "three";
-
-/* =========================================
-   HK MTR SIMULATOR 2.1
-   Corrected standalone 3D implementation
-========================================= */
+"use strict";
 
 const $=id=>document.getElementById(id);
-
-let scene,renderer,camera,train,world;
-let cabGroup,exteriorGroup;
-let running=false;
-let external=false;
-let lastTime=0;
-
-let speed=0;
-let power=0;
-let brake=0;
-let trainZ=0;
-let doors=false;
-let emergency=false;
-let elapsed=0;
-let motorTemp=25;
-let passengers=42;
-let messageTimer=0;
-let clockTime=480;
-let maxSpeed=80;
-let currentStop=0;
-let stationDistance=800;
-let stationStopped=false;
-let departureTimer=0;
-let terminalReached=false;
-let routeName="island";
-let stationNames=[];
-let quality="high";
-let audio=null;
-let speedLimitZone=80;
 
 const ROUTES={
  island:["Central","Admiralty","Wan Chai","Causeway Bay","Tin Hau","Fortress Hill","North Point","Quarry Bay","Tai Koo","Sai Wan Ho","Shau Kei Wan","Heng Fa Chuen","Chai Wan"],
@@ -243,60 +210,199 @@ const ROUTES={
  tko:["North Point","Yau Tong","Tiu Keng Leng","Tseung Kwan O","LOHAS Park","Hang Hau","Po Lam"]
 };
 
-function announce(t){
- $("message").textContent=t;
+let THREE=null;
+let scene,renderer,camera,train;
+let cab,exterior;
+let running=false;
+let loadingEngine=false;
+let external=false;
+let speed=0,power=0,brake=0;
+let trainZ=0;
+let currentStop=0;
+let stationDistance=800;
+let doors=false;
+let emergency=false;
+let stopped=false;
+let terminal=false;
+let departureTimer=0;
+let motorTemp=25;
+let passengers=42;
+let clockTime=480;
+let maxSpeed=80;
+let lastTime=0;
+let route=[];
+let routeKey="island";
+let quality="high";
+let messageTimer=0;
+let audio=null;
+
+function message(text){
+ $("message").textContent=text;
  $("message").classList.add("show");
  messageTimer=3.5;
 }
 
-function material(color,roughness=.7,metalness=0){
- return new THREE.MeshStandardMaterial({color,roughness,metalness});
+function showLoading(title,status,error){
+ $("loadingText").textContent=title;
+ $("loadingStatus").textContent=status||"";
+ $("loadingError").textContent=error||"";
+ $("loading").style.display="grid";
+ $("loadingClose").style.display=error?"inline-block":"none";
 }
 
-function box(parent,x,y,z,w,h,d,mat){
- const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);
- m.position.set(x,y,z);
- m.castShadow=true;
- m.receiveShadow=true;
- parent.add(m);
- return m;
+function hideLoading(){
+ $("loading").style.display="none";
 }
 
-function createTexture(base,detail,repeatX=4,repeatY=4){
+$("loadingClose").addEventListener("click",()=>{
+ hideLoading();
+ $("start").style.display="grid";
+});
+
+function loadThree(){
+ return new Promise((resolve,reject)=>{
+  if(window.THREE){
+   resolve(window.THREE);
+   return;
+  }
+
+  // Avoid duplicate script downloads.
+  const existing=document.querySelector('script[data-three-engine]');
+  if(existing){
+   existing.addEventListener("load",()=>resolve(window.THREE),{once:true});
+   existing.addEventListener("error",()=>reject(new Error("Three.js CDN failed to load.")),{once:true});
+   return;
+  }
+
+  const script=document.createElement("script");
+  script.src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.170.0/three.min.js";
+  script.dataset.threeEngine="true";
+  script.async=true;
+
+  script.onload=()=>{
+   if(window.THREE)resolve(window.THREE);
+   else reject(new Error("The Three.js script loaded but the engine was unavailable."));
+  };
+
+  script.onerror=()=>{
+   reject(new Error("Could not download Three.js. Check your internet connection or CDN access."));
+  };
+
+  document.head.appendChild(script);
+ });
+}
+
+async function startGame(){
+ if(running||loadingEngine)return;
+
+ loadingEngine=true;
+ $("startButton").disabled=true;
+ $("startButton").textContent="LOADING...";
+
+ routeKey=$("route").value;
+ route=ROUTES[routeKey];
+ quality=$("quality").value;
+
+ showLoading("Starting simulator","Downloading the 3D graphics engine...");
+
+ try{
+  THREE=await loadThree();
+
+  showLoading("Building railway","Creating train, tracks and stations...");
+
+  resetGame();
+  init3D();
+
+  running=true;
+  hideLoading();
+  $("start").style.display="none";
+
+  message("Welcome aboard! Service to "+route[route.length-1]+".");
+  lastTime=performance.now();
+  requestAnimationFrame(loop);
+
+ }catch(error){
+  console.error("STARTUP ERROR:",error);
+  showLoading(
+   "Simulator could not start",
+   "A technical error occurred:",
+   error.message
+  );
+ }finally{
+  loadingEngine=false;
+  $("startButton").disabled=false;
+  $("startButton").textContent="START SIMULATOR →";
+ }
+}
+
+function resetGame(){
+ speed=0;
+ power=0;
+ brake=0;
+ trainZ=0;
+ currentStop=0;
+ doors=false;
+ emergency=false;
+ stopped=false;
+ terminal=false;
+ departureTimer=0;
+ motorTemp=25;
+ passengers=42;
+ clockTime=480;
+ external=false;
+}
+
+function mat(color,roughness=.7,metalness=0){
+ return new THREE.MeshStandardMaterial({
+  color:color,
+  roughness:roughness,
+  metalness:metalness
+ });
+}
+
+function block(parent,x,y,z,w,h,d,material){
+ const mesh=new THREE.Mesh(
+  new THREE.BoxGeometry(w,h,d),
+  material
+ );
+ mesh.position.set(x,y,z);
+ mesh.castShadow=quality==="high";
+ mesh.receiveShadow=true;
+ parent.add(mesh);
+ return mesh;
+}
+
+function createTexture(base,detail){
  const c=document.createElement("canvas");
- c.width=512;c.height=512;
- const g=c.getContext("2d");
- g.fillStyle=base;
- g.fillRect(0,0,512,512);
+ c.width=256;c.height=256;
+ const ctx=c.getContext("2d");
+ ctx.fillStyle=base;
+ ctx.fillRect(0,0,256,256);
 
- for(let y=0;y<512;y+=64){
-  for(let x=0;x<512;x+=128){
-   g.fillStyle=detail;
-   g.fillRect(x+2,y+2,124,60);
-   g.fillStyle="#ffffff16";
-   g.fillRect(x+4,y+4,120,3);
-   g.fillStyle="#00000012";
-   g.fillRect(x+4,y+57,120,3);
+ for(let y=0;y<256;y+=32){
+  for(let x=0;x<256;x+=64){
+   ctx.fillStyle=detail;
+   ctx.fillRect(x+2,y+2,60,28);
+   ctx.fillStyle="#ffffff18";
+   ctx.fillRect(x+4,y+4,56,2);
   }
  }
 
- for(let i=0;i<4500;i++){
-  const x=Math.random()*512,y=Math.random()*512;
-  g.fillStyle=Math.random()>.5?"#ffffff0b":"#0000000a";
-  g.fillRect(x,y,2,2);
+ for(let i=0;i<1200;i++){
+  ctx.fillStyle=Math.random()>.5?"#ffffff12":"#00000012";
+  ctx.fillRect(Math.random()*256,Math.random()*256,2,2);
  }
 
- const t=new THREE.CanvasTexture(c);
- t.wrapS=t.wrapT=THREE.RepeatWrapping;
- t.repeat.set(repeatX,repeatY);
- t.colorSpace=THREE.SRGBColorSpace;
- return t;
+ const texture=new THREE.CanvasTexture(c);
+ texture.wrapS=texture.wrapT=THREE.RepeatWrapping;
+ texture.repeat.set(2,20);
+ return texture;
 }
 
-function init(){
+function init3D(){
  scene=new THREE.Scene();
- scene.background=new THREE.Color(0x101d29);
- scene.fog=new THREE.Fog(0x101d29,100,900);
+ scene.background=new THREE.Color(0x111f2b);
+ scene.fog=new THREE.Fog(0x111f2b,100,850);
 
  renderer=new THREE.WebGLRenderer({
   antialias:quality==="high",
@@ -305,504 +411,277 @@ function init(){
 
  renderer.setPixelRatio(Math.min(devicePixelRatio||1,quality==="high"?1.5:1));
  renderer.setSize(innerWidth,innerHeight);
- renderer.shadowMap.enabled=quality!=="low";
- renderer.shadowMap.type=THREE.PCFSoftShadowMap;
  renderer.outputColorSpace=THREE.SRGBColorSpace;
  renderer.toneMapping=THREE.ACESFilmicToneMapping;
  renderer.toneMappingExposure=1.15;
+ renderer.shadowMap.enabled=quality==="high";
 
  $("game").replaceChildren(renderer.domElement);
 
  camera=new THREE.PerspectiveCamera(72,innerWidth/innerHeight,.1,2000);
 
- const ambient=new THREE.HemisphereLight(0xc6e3ff,0x25303b,1.7);
- scene.add(ambient);
+ scene.add(new THREE.HemisphereLight(0xd4e9ff,0x28333c,1.8));
 
- const sunlight=new THREE.DirectionalLight(0xffe9cc,2);
- sunlight.position.set(-30,80,-20);
- sunlight.castShadow=quality!=="low";
- sunlight.shadow.mapSize.set(1024,1024);
- scene.add(sunlight);
+ const sun=new THREE.DirectionalLight(0xffedda,2);
+ sun.position.set(-30,60,-30);
+ sun.castShadow=quality==="high";
+ scene.add(sun);
 
- const point=new THREE.PointLight(0xa3dcff,20,150);
- point.position.set(0,5,30);
- scene.add(point);
-
- world=new THREE.Group();
+ const world=new THREE.Group();
  scene.add(world);
 
- buildEnvironment();
- buildTrain();
+ buildTrack(world);
  buildStations();
- resize();
+ buildTrain();
 
+ resize();
 }
 
-function buildEnvironment(){
- const concrete=material(0x38444d);
- const dark=material(0x101820);
- const rail=material(0x9daab1,.24,.9);
- const sleeper=material(0x51483f);
- const gravel=material(0x34383a);
- const wallTexture=createTexture("#46545c","#52636c",3,20);
- const tile=new THREE.MeshStandardMaterial({map:wallTexture,roughness:.82});
+function buildTrack(world){
+ const concrete=mat(0x424e56);
+ const dark=mat(0x18232b);
+ const steel=mat(0xa8b5bb,.22,.9);
+ const sleeper=mat(0x514940);
+ const wall=new THREE.MeshStandardMaterial({
+  map:createTexture("#45545c","#586770"),
+  roughness:.85
+ });
 
- box(world,0,-.75,2450,8,.45,5200,gravel);
+ block(world,0,-.7,2450,8,.4,5200,concrete);
 
- // Track sleepers
  for(let z=-100;z<5100;z+=3){
-  box(world,0,-.39,z,3.5,.19,1.05,sleeper);
+  block(world,0,-.39,z,3.5,.18,1,sleeper);
  }
 
- // Running rails
  for(const x of [-1.15,1.15]){
-  box(world,x,-.18,2450,.15,.24,5200,rail);
-  box(world,x,-.035,2450,.075,.04,5200,material(0xe0e6e7,.2,.8));
+  block(world,x,-.18,2450,.15,.23,5200,steel);
  }
 
- // Third rail
- box(world,-2,-.15,2450,.15,.2,5200,material(0x6e777b,.3,.7));
- box(world,-2,-.025,2450,.3,.04,5200,material(0xb4bec0,.2,.7));
+ block(world,-2,-.15,2450,.14,.2,5200,steel);
 
- // Tunnel walls
- const leftWall=new THREE.Mesh(
-  new THREE.BoxGeometry(.65,10,5200),tile
+ const left=new THREE.Mesh(
+  new THREE.BoxGeometry(.6,10,5200),wall
  );
- leftWall.position.set(-7,4,2450);
- world.add(leftWall);
+ left.position.set(-7,4,2450);
+ world.add(left);
 
- const rightWall=leftWall.clone();
- rightWall.position.x=7;
- world.add(rightWall);
+ const right=left.clone();
+ right.position.x=7;
+ world.add(right);
 
- box(world,0,9,2450,14,.8,5200,material(0x29343e));
+ block(world,0,9,2450,14,.6,5200,dark);
 
- // Tunnel arches
- for(let z=-100;z<5100;z+=25){
-  const arch=new THREE.Mesh(
-   new THREE.TorusGeometry(6.7,.17,8,40,Math.PI),
-   material(0x52616b,.5,.5)
-  );
-  arch.rotation.z=Math.PI;
-  arch.position.set(0,1,z);
-  arch.scale.y=.9;
-  world.add(arch);
- }
-
- // Ceiling lights
  for(let z=0;z<5100;z+=35){
-  box(world,0,8.25,z,1.8,.08,2,material(0xe8f6ff,.3));
+  block(world,0,8.25,z,2,.1,3,mat(0xe8f5ff));
 
-  if(quality==="high"){
-   const lamp=new THREE.PointLight(0xb4dfff,8,65);
-   lamp.position.set(0,7.8,z);
-   world.add(lamp);
+  if(quality!=="low"){
+   const light=new THREE.PointLight(0xaadfff,7,55);
+   light.position.set(0,7.6,z);
+   world.add(light);
   }
  }
 
- // Cable trays
- box(world,-5.9,5.4,2450,.2,.3,5200,material(0x52606a));
- box(world,5.9,5.4,2450,.2,.3,5200,material(0x52606a));
-
- // Trackside equipment
- for(let z=30;z<5100;z+=65){
-  box(world,4.8,.4,z,.9,.9,1.2,material(0x52616a));
-  box(world,-4.8,.35,z+20,.7,.7,1,material(0x354b5b));
+ for(let z=0;z<5100;z+=100){
+  block(world,4.8,.3,z,.8,.7,1,mat(0x53616b));
+  block(world,-4.8,.3,z+35,.8,.7,1,mat(0x384b5a));
  }
+}
 
- // Signals
- for(let z=150;z<5100;z+=200){
-  box(world,3.4,1.5,z,.13,3,.13,material(0x697982));
-  box(world,3.4,3,z,.75,.9,.3,dark);
+function buildStations(){
+ route.forEach((name,i)=>{
+  const z=stationDistance*(i+1);
+  const group=new THREE.Group();
+  group.position.z=z;
+  scene.add(group);
 
-  for(let j=0;j<3;j++){
-   const lamp=new THREE.Mesh(
-    new THREE.SphereGeometry(.11,12,12),
-    new THREE.MeshBasicMaterial({
-     color:[0x42e98a,0xffd04c,0xff344c][j]
-    })
-   );
-   lamp.position.set(3.4,3.25-j*.25,z+.18);
-   world.add(lamp);
+  const platform=mat(0x78858b);
+  const yellow=mat(0xf0c744);
+  const wall=mat(0xcbd4d6);
+  const glass=new THREE.MeshPhysicalMaterial({
+   color:0x244c63,
+   roughness:.15,
+   metalness:.3,
+   transparent:true,
+   opacity:.72
+  });
+
+  for(const side of [-1,1]){
+   block(group,side*4.5,-.1,0,3.5,.6,170,platform);
+   block(group,side*3,.23,0,.2,.04,170,yellow);
+
+   for(let p=-80;p<85;p+=4){
+    block(group,side*3.2,1.4,p,.12,2.4,3.7,glass);
+   }
+
+   for(let p=-75;p<85;p+=15){
+    block(group,side*5.9,2.4,p,.6,4.8,.6,wall);
+   }
+
+   for(let p=-50;p<70;p+=40){
+    block(group,side*5,.8,p,1.4,.15,3,mat(0x354b5b));
+   }
+
+   block(group,side*5.8,4,0,1,.8,5,mat(0x12334b));
   }
- }
+
+  block(group,0,7,0,13,.3,170,mat(0x56636b));
+
+  for(let p=-75;p<85;p+=12){
+   block(group,0,6.7,p,1.5,.08,4,mat(0xe6f4ff));
+  }
+
+  const canvas=document.createElement("canvas");
+  canvas.width=512;canvas.height=128;
+  const ctx=canvas.getContext("2d");
+  ctx.fillStyle="#0d3450";
+  ctx.fillRect(0,0,512,128);
+  ctx.fillStyle="white";
+  ctx.font="bold 48px Arial";
+  ctx.textAlign="center";
+  ctx.textBaseline="middle";
+  ctx.fillText(name.toUpperCase(),256,64);
+
+  const texture=new THREE.CanvasTexture(canvas);
+  const sign=new THREE.Mesh(
+   new THREE.PlaneGeometry(3.5,.85),
+   new THREE.MeshBasicMaterial({map:texture})
+  );
+  sign.position.set(0,5.2,30);
+  group.add(sign);
+ });
 }
 
 function buildTrain(){
  train=new THREE.Group();
  scene.add(train);
 
- exteriorGroup=new THREE.Group();
- train.add(exteriorGroup);
+ exterior=new THREE.Group();
+ train.add(exterior);
 
- const white=material(0xdce4e8,.35,.25);
- const red=material(0xd83243,.35,.25);
- const black=material(0x121b24,.25,.5);
- const metal=material(0x8d9ba2,.2,.9);
-
+ const white=mat(0xdce4e8,.35,.2);
+ const red=mat(0xd52e42,.35,.2);
+ const black=mat(0x15212a,.3,.5);
+ const metal=mat(0x9aa7ad,.2,.8);
  const glass=new THREE.MeshPhysicalMaterial({
-  color:0x234b62,
-  metalness:.4,
-  roughness:.12,
+  color:0x285269,
+  roughness:.13,
+  metalness:.3,
   transparent:true,
   opacity:.65
  });
 
- // Main train body
- box(exteriorGroup,0,2.05,-1,3.05,3.15,23,white);
- box(exteriorGroup,0,3.7,-1,3.12,.2,23,black);
- box(exteriorGroup,0,.85,-1,3.08,.24,23,red);
+ block(exterior,0,2.05,-1,3.05,3.15,23,white);
+ block(exterior,0,3.7,-1,3.1,.18,23,black);
+ block(exterior,0,.85,-1,3.08,.25,23,red);
 
- // Roof equipment
- for(let z=-9;z<10;z+=7){
-  box(exteriorGroup,0,3.85,z,1.5,.35,3,material(0x89969d));
- }
-
- // Side windows and doors
  for(const side of [-1,1]){
   for(let z=-10;z<=9;z+=3.5){
-   box(exteriorGroup,side*1.54,2.65,z,.055,1.05,2.5,glass);
+   block(exterior,side*1.54,2.65,z,.05,1.05,2.5,glass);
   }
 
   for(const z of [-7,-2,3,8]){
-   box(exteriorGroup,side*1.57,1.85,z,.07,2.3,1.2,material(0xc5d1d7));
-   box(exteriorGroup,side*1.61,1.9,z,.025,1.2,.78,glass);
-   box(exteriorGroup,side*1.64,1.85,z-.04,.02,2.3,.045,metal);
+   block(exterior,side*1.57,1.85,z,.06,2.3,1.15,white);
+   block(exterior,side*1.61,1.9,z,.025,1.2,.8,glass);
   }
  }
 
- // Front face
- box(exteriorGroup,0,1.9,10.55,3.05,2.8,.35,white);
- box(exteriorGroup,0,2.8,10.75,2.3,.8,.08,glass);
- box(exteriorGroup,0,1.25,10.77,2.8,.16,.1,red);
+ block(exterior,0,1.9,10.55,3.05,2.8,.35,white);
+ block(exterior,0,2.8,10.75,2.3,.8,.08,glass);
+ block(exterior,0,1.25,10.77,2.8,.16,.1,red);
+ block(exterior,0,1.9,-12.55,3.05,2.8,.35,white);
 
- // Headlights
- for(const x of [-1,1]){
-  const head=new THREE.Mesh(
-   new THREE.CircleGeometry(.18,24),
-   new THREE.MeshBasicMaterial({color:0xfff2c0})
-  );
-  head.position.set(x,1.2,10.78);
-  exteriorGroup.add(head);
-
-  const light=new THREE.SpotLight(0xfff3d1,20,100,.35,.5,1);
-  light.position.set(x,1.2,10.8);
-  light.target.position.set(x,0,60);
-  train.add(light);
-  train.add(light.target);
- }
-
- // Rear face
- box(exteriorGroup,0,1.9,-12.55,3.05,2.8,.35,white);
-
- // Bogies and wheels
  for(const z of [-8,7]){
-  box(exteriorGroup,0,.5,z,2.5,.55,3,black);
+  block(exterior,0,.5,z,2.5,.55,3,black);
 
   for(const side of [-1,1]){
    for(const wz of [-1,1]){
     const wheel=new THREE.Mesh(
-     new THREE.CylinderGeometry(.48,.48,.2,24),
+     new THREE.CylinderGeometry(.48,.48,.2,20),
      black
     );
     wheel.rotation.z=Math.PI/2;
     wheel.position.set(side*1.35,.55,z+wz);
-    exteriorGroup.add(wheel);
-
-    const hub=new THREE.Mesh(
-     new THREE.CylinderGeometry(.17,.17,.22,20),
-     metal
-    );
-    hub.rotation.z=Math.PI/2;
-    hub.position.copy(wheel.position);
-    exteriorGroup.add(hub);
+    exterior.add(wheel);
    }
   }
  }
 
- // Cab interior
- cabGroup=new THREE.Group();
- train.add(cabGroup);
+ // Cab
+ cab=new THREE.Group();
+ train.add(cab);
 
- box(cabGroup,0,.1,7,3,.2,7,material(0x202d38));
- box(cabGroup,-1.48,1.4,7,.1,2.8,7,material(0x374550));
- box(cabGroup,1.48,1.4,7,.1,2.8,7,material(0x374550));
- box(cabGroup,0,2.9,7,3,.15,7,material(0x202c36));
+ block(cab,0,.1,7,3,.2,7,mat(0x202e38));
+ block(cab,-1.48,1.4,7,.1,2.8,7,mat(0x394954));
+ block(cab,1.48,1.4,7,.1,2.8,7,mat(0x394954));
+ block(cab,0,2.9,7,3,.15,7,black);
 
- // Windscreen
- box(cabGroup,-1.4,2.4,10.3,.12,1.5,.12,black);
- box(cabGroup,1.4,2.4,10.3,.12,1.5,.12,black);
- box(cabGroup,0,3.12,10.3,3,.12,.12,black);
- box(cabGroup,0,1.65,10.3,3,.12,.12,black);
+ block(cab,-1.4,2.4,10.3,.12,1.5,.12,black);
+ block(cab,1.4,2.4,10.3,.12,1.5,.12,black);
+ block(cab,0,3.12,10.3,3,.12,.12,black);
+ block(cab,0,1.65,10.3,3,.12,.12,black);
 
- // Dashboard
- box(cabGroup,0,1.05,9.2,2.9,.8,1.1,material(0x101b25));
- box(cabGroup,0,1.5,9.15,1.7,.12,.65,material(0x152e40));
+ block(cab,0,1.05,9.2,2.9,.8,1.1,black);
+ block(cab,0,1.5,9.15,1.7,.12,.65,mat(0x075266));
 
- const screen=new THREE.Mesh(
-  new THREE.PlaneGeometry(1.2,.5),
-  new THREE.MeshBasicMaterial({color:0x064a5b})
- );
- screen.position.set(0,1.55,8.78);
- screen.rotation.x=-.1;
- cabGroup.add(screen);
-
- for(const x of [-.9,.9]){
-  const knob=new THREE.Mesh(
-   new THREE.CylinderGeometry(.12,.12,.12,16),
-   metal
-  );
-  knob.position.set(x,1.52,8.5);
-  cabGroup.add(knob);
- }
-
- // Driver chair
- box(cabGroup,0,.85,6.2,.9,.18,.9,material(0x263c4c));
- box(cabGroup,0,1.4,5.8,.9,1,.18,material(0x263c4c));
-
- cabGroup.visible=true;
- exteriorGroup.visible=false;
-}
-
-function buildStations(){
- const platformMat=material(0x78858b);
- const wallMat=new THREE.MeshStandardMaterial({
-  map:createTexture("#dadfe0","#c5ced0",4,10),
-  roughness:.8
- });
- const yellow=material(0xf2c842);
- const metal=material(0x8d9ba2,.2,.8);
-
- const screenMat=new THREE.MeshPhysicalMaterial({
-  color:0x274658,
-  roughness:.12,
-  metalness:.3,
-  transparent:true,
-  opacity:.7
- });
-
- stationNames.forEach((name,i)=>{
-  const z=stationDistance*(i+1);
-  const group=new THREE.Group();
-  group.position.z=z;
-  scene.add(group);
-
-  for(const side of [-1,1]){
-   box(group,side*4.5,-.1,0,3.5,.6,170,platformMat);
-   box(group,side*3,.23,0,.22,.04,170,yellow);
-
-   // Platform screen doors
-   for(let p=-80;p<85;p+=4){
-    box(group,side*3.2,1.45,p,.12,2.4,3.7,screenMat);
-    box(group,side*3.2,2.7,p,.2,.1,3.7,metal);
-   }
-
-   // Pillars
-   for(let p=-75;p<85;p+=15){
-    box(group,side*5.9,2.4,p,.65,4.8,.65,material(0x9aa7ac));
-   }
-
-   // Benches
-   for(let p=-50;p<70;p+=40){
-    box(group,side*5,.75,p,1.5,.15,3,material(0x344a57));
-
-    for(const leg of [-1,1]){
-     box(group,side*5,.35,p+leg,1.3,.7,.1,metal);
-    }
-   }
-
-   // Station signage
-   box(group,side*5.7,4.2,0,1.2,1.1,5,material(0x112b43));
-  }
-
-  // Ceiling
-  box(group,0,7,0,13,.35,170,material(0x58636a));
-
-  for(let p=-75;p<85;p+=12){
-   box(group,0,6.7,p,1.5,.08,4,material(0xe6f5ff));
-  }
-
-  // Station name sign
-  box(group,0,5.3,30,4,.85,.15,material(0x102f49));
-  const text=createText(name.toUpperCase());
-  text.position.set(0,5.35,29.9);
-  group.add(text);
-
-  // Platform passengers
-  for(let p=0;p<18;p++){
-   const side=p%2?1:-1;
-   const zz=-75+Math.random()*150;
-   const passenger=makePassenger();
-   passenger.position.set(side*4.5,0,zz);
-   group.add(passenger);
-  }
- });
-}
-
-function createText(text){
- const c=document.createElement("canvas");
- c.width=512;c.height=128;
- const g=c.getContext("2d");
- g.fillStyle="#0a2b43";
- g.fillRect(0,0,512,128);
- g.fillStyle="#fff";
- g.font="bold 48px Arial";
- g.textAlign="center";
- g.textBaseline="middle";
- g.fillText(text,256,64);
-
- const texture=new THREE.CanvasTexture(c);
- const mat=new THREE.MeshBasicMaterial({
-  map:texture,
-  transparent:true
- });
- return new THREE.Mesh(new THREE.PlaneGeometry(3.5,.85),mat);
-}
-
-function makePassenger(){
- const g=new THREE.Group();
- const clothes=[0x283d55,0x6d4850,0x344e45,0x8b7963,0x38465b];
- const bodyMat=material(clothes[Math.floor(Math.random()*clothes.length)]);
- const skin=material(0xd4a17d);
-
- const body=new THREE.Mesh(
-  new THREE.CapsuleGeometry(.19,.65,4,8),
-  bodyMat
- );
- body.position.y=1;
- g.add(body);
-
- const head=new THREE.Mesh(
-  new THREE.SphereGeometry(.17,12,12),
-  skin
- );
- head.position.y=1.55;
- g.add(head);
-
- for(const side of [-1,1]){
-  box(g,side*.1,.3,0,.13,.55,.15,material(0x202b37));
- }
- return g;
-}
-
-function startGame(){
- if(running)return;
-
- $("loading").classList.add("show");
- $("loadingText").textContent="Building 3D railway...";
-
- try{
-  routeName=$("route").value;
-  stationNames=ROUTES[routeName];
-  quality=$("quality").value;
-
-  speed=0;
-  power=0;
-  brake=0;
-  trainZ=0;
-  currentStop=0;
-  stationDistance=800;
-  doors=false;
-  emergency=false;
-  passengers=42;
-  clockTime=480;
-  elapsed=0;
-  motorTemp=25;
-  stationStopped=false;
-  departureTimer=0;
-  terminalReached=false;
-  external=false;
-
-  $("camera").textContent="📷 EXTERIOR";
-  $("speed").textContent="0";
-
-  init();
-
-  running=true;
-  $("start").style.display="none";
-  $("loading").classList.remove("show");
-
-  announce("Welcome aboard. Service to "+stationNames[stationNames.length-1]+".");
-  lastTime=performance.now();
-  requestAnimationFrame(animate);
-
- }catch(error){
-  console.error(error);
-  $("loading").classList.remove("show");
-  alert("Unable to start the 3D simulator.\n\n"+error.message+"\n\nCheck your internet connection and browser WebGL support.");
- }
+ cab.visible=true;
+ exterior.visible=false;
 }
 
 function switchCamera(){
  if(!running)return;
 
  external=!external;
- cabGroup.visible=!external;
- exteriorGroup.visible=external;
-
+ cab.visible=!external;
+ exterior.visible=external;
  $("camera").textContent=external?"📷 DRIVER CAB":"📷 EXTERIOR";
 }
 
-function toggleDoors(){
- if(!running)return;
-
- if(speed>.5){
-  announce("Safety interlock: train must stop before opening doors.");
-  return;
- }
-
- const target=stationDistance*(currentStop+1);
-
- if(Math.abs(trainZ-target)>35){
-  announce("No platform detected. Doors remain locked.");
-  return;
- }
-
- doors=!doors;
-
- if(doors){
-  power=0;
-  passengers=Math.floor(20+Math.random()*110);
-  announce("Doors open. Passengers boarding.");
- }else{
-  announce("Doors closed. Please stand clear.");
- }
-}
-
-function changePower(v){
- if(!running||doors||terminalReached)return;
-
+function setPower(v){
+ if(!running||doors||terminal)return;
  power=Math.max(0,Math.min(100,power+v));
  if(power>0)brake=0;
 }
 
 function setBrake(v){
  if(!running)return;
-
  brake=Math.max(0,Math.min(100,v));
  if(brake>0)power=0;
 }
 
 function emergencyStop(){
  if(!running)return;
-
  power=0;
  brake=100;
  emergency=true;
- announce("EMERGENCY BRAKING");
+ message("EMERGENCY BRAKING!");
 }
 
-function updatePhysics(dt){
+function toggleDoors(){
  if(!running)return;
 
- elapsed+=dt;
- clockTime+=dt*.4;
+ const target=stationDistance*(currentStop+1);
 
- const acceleration=power*.018;
- const deceleration=brake*.038;
+ if(speed>.5||Math.abs(trainZ-target)>35){
+  message("Doors locked: stop at a station first.");
+  return;
+ }
+
+ doors=!doors;
+ if(doors){
+  power=0;
+  passengers=Math.floor(20+Math.random()*100);
+  message("Doors open. Passengers boarding.");
+ }else{
+  message("Doors closed. Please stand clear.");
+ }
+}
+
+function physics(dt){
+ const accel=power*.018;
+ const decel=brake*.038;
  const drag=.0015*speed;
 
- speed+=(acceleration-deceleration-drag)*dt*3.6;
+ speed+=(accel-decel-drag)*dt*3.6;
  speed=Math.max(0,Math.min(maxSpeed,speed));
 
  if(doors){
@@ -813,51 +692,42 @@ function updatePhysics(dt){
  trainZ+=speed/3.6*dt;
 
  const target=stationDistance*(currentStop+1);
- const remaining=target-trainZ;
+ let remaining=target-trainZ;
 
- // Station arrival
- if(remaining<=0&&!stationStopped){
+ if(remaining<=0&&!stopped){
   trainZ=target;
   speed=0;
   power=0;
   brake=0;
-  stationStopped=true;
+  stopped=true;
   departureTimer=0;
 
-  if(currentStop+1>=stationNames.length-1){
-   terminalReached=true;
-   announce("🚉 Arrived at TERMINUS: "+stationNames[stationNames.length-1]+".");
+  if(currentStop+1>=route.length-1){
+   terminal=true;
+   message("Arrived at terminal: "+route[route.length-1]);
   }else{
-   announce("🚉 Arrived at "+stationNames[currentStop+1]+". Please mind the platform gap.");
+   message("Arrived at "+route[currentStop+1]+".");
   }
  }
 
- if(emergency&&speed<.1){
-  speed=0;
+ if(stopped&&!doors&&!terminal&&power>0&&speed>1){
+  departureTimer+=dt;
+  if(departureTimer>.7){
+   currentStop++;
+   stopped=false;
+   departureTimer=0;
+   message("Departing "+route[currentStop]+".");
+  }
  }
 
- // Train movement
  train.position.z=trainZ;
 
- // Camera
  if(external){
   camera.position.set(0,9,trainZ-27);
   camera.lookAt(0,1.5,trainZ+1);
  }else{
   camera.position.set(0,2.45,trainZ+7.6);
   camera.lookAt(0,2.45,trainZ+100);
- }
-
- // Depart after station stop
- if(stationStopped&&!doors&&!terminalReached&&power>0&&speed>1){
-  departureTimer+=dt;
-
-  if(departureTimer>.7){
-   currentStop++;
-   stationStopped=false;
-   departureTimer=0;
-   announce("Departing "+stationNames[currentStop]+".");
-  }
  }
 
  motorTemp=Math.min(100,motorTemp+power*.001*dt);
@@ -869,46 +739,35 @@ function updatePhysics(dt){
 function updateHUD(remaining){
  $("speed").textContent=Math.round(speed);
  $("limit").textContent=maxSpeed;
-
- $("station").textContent=stationNames[
-  Math.min(currentStop,stationNames.length-1)
- ].toUpperCase();
-
- $("next").textContent=terminalReached?
-  "TERMINUS":
-  (stationNames[Math.min(currentStop+1,stationNames.length-1)]||"TERMINUS").toUpperCase();
-
+ $("station").textContent=route[Math.min(currentStop,route.length-1)].toUpperCase();
+ $("next").textContent=terminal?"TERMINUS":route[Math.min(currentStop+1,route.length-1)].toUpperCase();
  $("distance").textContent=Math.round(remaining)+" m";
  $("progress").style.width=(100*(1-Math.min(1,remaining/stationDistance)))+"%";
-
  $("doors").textContent=doors?"OPEN":"CLOSED";
- $("doors").style.color=doors?"#48e5a3":"white";
  $("passengers").textContent=passengers;
  $("power").textContent=Math.round(power)+"%";
  $("brake").textContent=Math.round(brake)+"%";
  $("motorbar").style.width=motorTemp+"%";
 
  const signal=remaining<180?"RED":remaining<450?"YELLOW":"GREEN";
-
  $("signal").textContent=signal;
- $("signal").style.color=signal==="RED"?"#ff5367":signal==="YELLOW"?"#ffc64e":"#48e5a3";
+ $("signal").style.color=signal==="RED"?"#ff5669":signal==="YELLOW"?"#ffd04a":"#49e6a0";
  $("signalSpeed").textContent=signal==="RED"?0:signal==="YELLOW"?40:maxSpeed;
 
- const m=Math.floor(clockTime);
- $("clock").textContent=
-  String(Math.floor(m/60)%24).padStart(2,"0")+":"+
-  String(m%60).padStart(2,"0");
+ clockTime+=.4/60;
+ const mins=Math.floor(clockTime);
+ $("clock").textContent=String(Math.floor(mins/60)%24).padStart(2,"0")+":"+String(mins%60).padStart(2,"0");
 }
 
-function animate(now){
+function loop(now){
  if(!running)return;
 
- requestAnimationFrame(animate);
+ requestAnimationFrame(loop);
 
  const dt=Math.min((now-lastTime)/1000,.05);
  lastTime=now;
 
- updatePhysics(dt);
+ physics(dt);
 
  if(messageTimer>0){
   messageTimer-=dt;
@@ -920,7 +779,6 @@ function animate(now){
 
 function resize(){
  if(!renderer||!camera)return;
-
  camera.aspect=innerWidth/innerHeight;
  camera.updateProjectionMatrix();
  renderer.setSize(innerWidth,innerHeight);
@@ -929,153 +787,96 @@ function resize(){
 function openMap(){
  if(!running)return;
 
- $("map").style.display="grid";
-
- $("stationList").innerHTML=stationNames.map((s,i)=>
- `<div class="stationRow">${i===currentStop?"📍":i<currentStop?"✓":"○"} ${s}</div>`
+ $("stationList").innerHTML=route.map((s,i)=>
+  `<div class="stationRow">${i===currentStop?"📍":i<currentStop?"✓":"○"} ${s}</div>`
  ).join("");
+
+ $("map").style.display="grid";
 }
 
-function closeMap(){
- $("map").style.display="none";
-}
-
-function openSettings(){
- $("settings").style.display="grid";
-}
-
-function closeSettings(){
- $("settings").style.display="none";
-}
+function closeMap(){$("map").style.display="none"}
+function openSettings(){$("settings").style.display="grid"}
+function closeSettings(){$("settings").style.display="none"}
 
 function applySettings(){
+ maxSpeed=Number($("speedLimit").value);
+
  if(camera){
   camera.fov=Number($("fov").value);
   camera.updateProjectionMatrix();
  }
- maxSpeed=Number($("speedLimit").value);
+
  closeSettings();
- announce("Settings applied.");
+ message("Settings applied.");
 }
 
-/* =================================
-   CONTROLS
-================================= */
-
-function hold(id,down,up){
- const el=$(id);
-
- el.addEventListener("pointerdown",e=>{
-  e.preventDefault();
-  if(el.setPointerCapture)el.setPointerCapture(e.pointerId);
-  el.classList.add("active");
-  down();
- });
-
- function release(){
-  el.classList.remove("active");
-  if(up)up();
- }
-
- el.addEventListener("pointerup",release);
- el.addEventListener("pointercancel",release);
- el.addEventListener("lostpointercapture",release);
-}
-
-hold("plus",()=>changePower(10));
-hold("minus",()=>changePower(-10));
-hold("brakeButton",()=>setBrake(65),()=>setBrake(0));
-hold("emergency",()=>emergencyStop());
-
-$("doorButton").addEventListener("click",toggleDoors);
+/* BUTTONS ARE REGISTERED IMMEDIATELY */
+$("startButton").addEventListener("click",startGame);
 $("camera").addEventListener("click",switchCamera);
 $("mapButton").addEventListener("click",openMap);
 $("closeMap").addEventListener("click",closeMap);
 $("settingsButton").addEventListener("click",openSettings);
 $("closeSettings").addEventListener("click",closeSettings);
 $("applySettings").addEventListener("click",applySettings);
-$("startButton").addEventListener("click",startGame);
+$("doorButton").addEventListener("click",toggleDoors);
+$("emergency").addEventListener("click",emergencyStop);
+$("plus").addEventListener("click",()=>setPower(10));
+$("minus").addEventListener("click",()=>setPower(-10));
+
+/* Touch and mouse brake */
+const brakeButton=$("brakeButton");
+brakeButton.addEventListener("pointerdown",e=>{
+ e.preventDefault();
+ brakeButton.setPointerCapture(e.pointerId);
+ setBrake(65);
+});
+function releaseBrake(){setBrake(0)}
+brakeButton.addEventListener("pointerup",releaseBrake);
+brakeButton.addEventListener("pointercancel",releaseBrake);
+brakeButton.addEventListener("lostpointercapture",releaseBrake);
 
 $("horn").addEventListener("click",()=>{
  if(!running)return;
-
- announce("Train horn!");
+ message("Train horn!");
 
  try{
-  if(!audio){
-   audio=new(window.AudioContext||window.webkitAudioContext)();
-  }
-
+  if(!audio)audio=new(window.AudioContext||window.webkitAudioContext)();
   if(audio.state==="suspended")audio.resume();
 
-  const osc=audio.createOscillator();
+  const oscillator=audio.createOscillator();
   const gain=audio.createGain();
-
-  osc.frequency.value=440;
+  oscillator.frequency.value=440;
   gain.gain.value=.08;
-
-  osc.connect(gain);
+  oscillator.connect(gain);
   gain.connect(audio.destination);
-
-  osc.start();
-  osc.stop(audio.currentTime+.35);
- }catch(e){
-  console.warn("Audio unavailable",e);
- }
+  oscillator.start();
+  oscillator.stop(audio.currentTime+.35);
+ }catch(e){}
 });
 
-/* Keyboard */
-const pressed={};
+/* KEYBOARD CONTROLS */
+const keys={};
 
 addEventListener("keydown",e=>{
- if(["ArrowUp","ArrowDown"," "].includes(e.key))e.preventDefault();
-
- if(pressed[e.key])return;
- pressed[e.key]=true;
+ if(keys[e.key])return;
+ keys[e.key]=true;
 
  switch(e.key.toLowerCase()){
   case "w":
-  case "arrowup":
-   changePower(10);
-   break;
-
+  case "arrowup":setPower(10);break;
+  case "a":setPower(-10);break;
   case "s":
-  case "arrowdown":
-   setBrake(65);
-   break;
-
-  case "a":
-   changePower(-10);
-   break;
-
-  case " ":
-   emergencyStop();
-   break;
-
-  case "d":
-   toggleDoors();
-   break;
-
-  case "h":
-   $("horn").click();
-   break;
-
-  case "c":
-   switchCamera();
-   break;
-
-  case "m":
-   openMap();
-   break;
+  case "arrowdown":setBrake(65);break;
+  case " ":emergencyStop();break;
+  case "d":toggleDoors();break;
+  case "c":switchCamera();break;
+  case "m":openMap();break;
  }
 });
 
 addEventListener("keyup",e=>{
- pressed[e.key]=false;
-
- if(e.key.toLowerCase()==="s"||e.key==="ArrowDown"){
-  setBrake(0);
- }
+ keys[e.key]=false;
+ if(e.key.toLowerCase()==="s"||e.key==="ArrowDown")setBrake(0);
 });
 
 addEventListener("blur",()=>{
@@ -1083,40 +884,9 @@ addEventListener("blur",()=>{
  setBrake(30);
 });
 
-document.addEventListener("visibilitychange",()=>{
- if(document.hidden){
-  power=0;
-  setBrake(40);
- }
-});
-
 addEventListener("resize",resize);
 
-/* =================================
-   EXPOSED BUTTON FUNCTIONS
-   No inline module access required
-================================= */
-
-Object.assign(window,{
- startGame,
- openMap,
- closeMap,
- openSettings,
- closeSettings,
- applySettings,
- switchCamera
-});
-
-window.addEventListener("error",e=>{
- console.error("Simulator error:",e.message);
-});
-
-window.addEventListener("unhandledrejection",e=>{
- console.error("Simulator loading error:",e.reason);
- $("loading").classList.remove("show");
- alert("3D loading error: "+String(e.reason));
-});
-
+})();
 </script>
 </body>
 </html>
